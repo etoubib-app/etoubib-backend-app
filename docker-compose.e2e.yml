@@ -1,0 +1,26 @@
+version: "3"
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    ports:
+      - "15432:5432"
+    environment:
+      - POSTGRES_DB=nestjs_boilerplate
+      - POSTGRES_USER=default
+      - POSTGRES_PASSWORD=password
+      - TZ=UTC
+      - PGTZ=UTC
+    networks:
+      - backend
+    volumes:
+      - dbdata:/var/lib/postgresql/data
