@@ -22,10 +22,10 @@
     "docker:compose-up": "docker-compose -f docker-compose.e2e.yml up -d",
     "docker:compose-down": "docker-compose -f docker-compose.e2e.yml down -v",
     "migration:generate": "env-cmd -f ./.env.dev sh -c 'ts-node ./scripts/migrations/generateMigrations.ts $SCHEMA_NAME'",
-    "migration:runs": "env-cmd -f ./.env.dev sh -c 'ts-node ./scripts/migrations/runMigrations.ts'",
-    "migration:run": "env-cmd -f ./.env.dev sh -c 'npx ts-node -P ./tsconfig.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d ./src/config/typeorm.$CONFIG_FILE.config.ts'",
-    "migration:create": "npx ts-node -P ./tsconfig.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:create -d ./src/config/typeorm.config.ts ./src/database/migrations/migration",
-    "migration:revert": "npx ts-node -P ./tsconfig.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:revert -d ./src/config/typeorm.backoffice.config.ts"
+    "migration:run": "env-cmd -f ./.env.dev sh -c 'ts-node ./scripts/migrations/runSpecificMigration.ts $SCHEMA_NAME'",
+    "migration:run:all": "env-cmd -f ./.env.dev sh -c 'ts-node ./scripts/migrations/runMigrations.ts'",
+    "migration:run:cloud": "ts-node ./scripts/migrations/runMigrations.ts",
+    "migration:create": "sh -c 'npx ts-node -P ./tsconfig.json -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:create ./src/database/migrations/$SCHEMA_NAME/migration'"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

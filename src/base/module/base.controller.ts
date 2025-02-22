@@ -27,7 +27,5 @@ export abstract class BaseController<
   }
 
   @Patch(':id')
-  updateOne(@Param('id') id: string, @Body() updateBaseDto: UpdateBaseDto) {
-    return this.superBaseService.updateOne(id, updateBaseDto);
-  }
+  updateOne(@Param('id') id: string, @Body() updateBaseDto: UpdateBaseDto) {}
 }

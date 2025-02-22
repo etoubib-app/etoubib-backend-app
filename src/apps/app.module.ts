@@ -4,6 +4,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import appConfig from '../config/app.config';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { BackofficeModule } from './backoffice/backoffice.module';
+import { CoreModule } from './core/core.module';
 
 @Module({
   imports: [
@@ -13,15 +15,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
-        autoLoadEntities: true,
         type: 'postgres',
-        url: configService.get('typeorm_url'),
-        schema: configService.get('typeorm_schema'),
+        url: configService.get('TYPEORM_URL'),
         logging: false,
+        autoLoadEntities: true,
         synchronize: false,
       }),
       inject: [ConfigService],
     }),
+    BackofficeModule,
+    CoreModule,
   ],
 })
 export class AppModule {}

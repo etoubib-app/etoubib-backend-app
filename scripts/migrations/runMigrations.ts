@@ -1,6 +1,6 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { getSourceSchema } from './migration.helpers';
-import { Clinic } from '../../src/apps/backoffice/entities/clinic.entity';
+import { Clinic } from '../../src/apps/backoffice/modules/clinics/entities/clinic.entity';
 
 runAllMigrations()
   .then(() => {
@@ -40,6 +40,10 @@ async function runAllMigrations() {
       console.error('Error running clinic migration:', error);
       clinicsMigrationFailed.push(clinic.name);
     }
+  }
+  if (clinicsMigrationFailed.length > 0) {
+    console.error('Clinics migration failed:', clinicsMigrationFailed);
+    process.exit(1);
   }
 }
 

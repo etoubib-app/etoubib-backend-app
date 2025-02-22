@@ -18,7 +18,7 @@ export class DynamicSchemaSubscriber
 
   async afterInsert(event: InsertEvent<Clinic>) {
     const clinic = event.entity;
-    await this.createDynamicSchema(clinic.key);
+    await this.createDynamicSchema(clinic.name);
   }
 
   private async createDynamicSchema(schemaName: string) {
@@ -28,22 +28,6 @@ export class DynamicSchemaSubscriber
     await queryRunner.startTransaction();
 
     try {
-      // Create new schema
-      await queryRunner.query(`CREATE SCHEMA IF NOT EXISTS "${schemaName}"`);
-
-      // Create tables in the new schema
-      await queryRunner.query(`
-        CREATE TABLE "${schemaName}"."a" (
-          id SERIAL PRIMARY KEY
-        )
-      `);
-
-      await queryRunner.query(`
-        CREATE TABLE "${schemaName}"."b" (
-          id SERIAL PRIMARY KEY
-        )
-      `);
-
       await queryRunner.commitTransaction();
     } catch (err) {
       await queryRunner.rollbackTransaction();

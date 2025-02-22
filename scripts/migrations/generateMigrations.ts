@@ -26,6 +26,13 @@ const dataSource = new DataSource({
 
 generateMigrations()
   .then(async ({ upSqls, downSqls }) => {
+    if (upSqls.length < 1 && downSqls.length < 1) {
+      console.log('No changes detected');
+      process.exit(0);
+    }
+    console.log('upSqls: ', upSqls);
+    console.log('downSqls: ', downSqls);
+
     console.log('Migration generated successfully');
     const fileContent = await getTemplate(
       'migration',

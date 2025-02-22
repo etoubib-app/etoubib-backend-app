@@ -1,4 +1,5 @@
-import { DataSource, DataSourceOptions } from 'typeorm';
+import { DataSource } from 'typeorm';
+import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { ConfigService } from '@nestjs/config';
 import { config } from 'dotenv';
 config();
@@ -7,7 +8,7 @@ const configService = new ConfigService();
 
 export const getCoreSourceOptions = (
   innerConfigService: ConfigService = configService,
-): DataSourceOptions => ({
+): PostgresConnectionOptions => ({
   type: 'postgres',
   url: innerConfigService.get<string>('TYPEORM_URL'),
   synchronize: false,
@@ -17,6 +18,6 @@ export const getCoreSourceOptions = (
   logging: true,
 });
 
-const AppDataSource = new DataSource(getCoreSourceOptions());
+const CoDataSource = new DataSource(getCoreSourceOptions());
 
-export default AppDataSource;
+export default CoDataSource;
