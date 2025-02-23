@@ -26,8 +26,8 @@ async function bootstrap() {
   app.use(urlencoded({ extended: true, limit: '50mb' }));
 
   const config = new DocumentBuilder()
-    .setTitle('NestBoilerPlate Api')
-    .setDescription('Documentation of NestBoilerPlate Api')
+    .setTitle('Etoubib Api')
+    .setDescription('Documentation of Etoubib Api')
     .setVersion('0.1')
     .build();
 
