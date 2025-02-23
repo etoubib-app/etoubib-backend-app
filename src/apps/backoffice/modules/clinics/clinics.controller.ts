@@ -2,7 +2,7 @@ import { Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { ClinicsService } from './clinics.service';
 import { CreateClinicDto } from './dto/create-clinic.dto';
 import { UpdateClinicDto } from './dto/update-clinic.dto';
-import { BackofficeController } from '../../../../../src/shared/helpers';
+import { BackofficeController } from '../../../../shared/helpers';
 
 @BackofficeController('clinics')
 export class ClinicsController {

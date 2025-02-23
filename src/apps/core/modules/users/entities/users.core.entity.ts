@@ -1,9 +1,9 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity({ name: 'clinics' })
-export class CoreClinics {
-  @PrimaryGeneratedColumn()
-  id: number;
+@Entity({ name: 'users' })
+export class CoreUsers {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ type: 'varchar', length: 255 })
   name: string;

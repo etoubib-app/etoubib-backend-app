@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
-import { CoreClinicsModule } from './modules/clinics/clinics.module';
-import { DatabaseModule } from './database.module';
+import { CoreUsersModule } from './modules/users/users.core.module';
 
 @Module({
-  imports: [DatabaseModule, CoreClinicsModule],
+  imports: [CoreUsersModule],
 })
 export class CoreModule {}

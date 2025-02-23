@@ -1,6 +1,6 @@
 import { ForbiddenException, Module, Scope } from '@nestjs/common';
 import { CONNECTION } from 'src/constants/app.constant';
-import { getTenantConnection } from './tenancy/connection';
+import { getTenantConnection } from './connection';
 import { REQUEST } from '@nestjs/core';
 
 const connectionFactory = {
@@ -13,6 +13,7 @@ const connectionFactory = {
     }
     return getTenantConnection(schema_name);
   },
+
   inject: [REQUEST],
 };
 

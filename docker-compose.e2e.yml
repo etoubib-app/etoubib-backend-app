@@ -6,7 +6,7 @@ volumes:
 
 services:
   postgres:
-    build: .
+    build: ./Dockerfile.dev
     restart: unless-stopped
     ports:
       - "5432:5432"

@@ -1,3 +1,6 @@
+run-in-docker:
+	docker exec -it nest_app make $(COMMAND)
+
 migration-generate:
 	@if [ -z "$(SCHEMA)" ]; then \
 		read -p "Please enter SCHEMA (backoffice or core): " SCHEMA; \

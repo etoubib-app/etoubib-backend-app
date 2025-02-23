@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import appConfig from '../config/app.config';
@@ -17,7 +17,7 @@ import { CoreModule } from './core/core.module';
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
         url: configService.get('TYPEORM_URL'),
-        logging: false,
+        logging: true,
         autoLoadEntities: true,
         synchronize: false,
       }),
