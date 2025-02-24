@@ -28,10 +28,10 @@ services:
     restart: always
     depends_on:
       - postgres # Ensure PostgreSQL starts before the app
+    env_file:
+      - .env.example
     ports:
       - '3000:3000'
-    environment:
-      TYPEORM_URL: 'postgres://default:password@postgres:5432/etoubib_db' # Connection string for DB
     volumes:
       - .:/app # Mount your local code to the container
       - /app/node_modules # Prevent conflicts with node_modules

@@ -19,14 +19,8 @@ RUN pnpm install --frozen-lockfile
 # Copy the rest of the NestJS source code
 COPY . .
 
-# Copy .env.example and rename it as .env
-COPY .env.example .env
-
-# List the files in the /app directory to check what was copied
-RUN ls -al /app
-
 # Expose the port the app runs on
 EXPOSE 3000
 
 # Run the app in development mode
-CMD ["npm", "run", "start:dev"]
+CMD ["pnpm", "start:dev"]
