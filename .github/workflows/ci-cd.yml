@@ -1,0 +1,101 @@
+name: CI/CD for Etoubib Api
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+  pull_request:
+    branches:
+      - main
+      - staging
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js 22.14.0
+        uses: actions/setup-node@v2
+        with:
+          node-version: '22.14.0'
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: Run unit tests (log for now)
+        run: |
+          echo "Running unit tests..."
+          # we will add our test here in future
+          # npm run test
+
+  build_for_migration:
+    runs-on: ${{ github.ref == 'refs/heads/main' && 'self-hosted, production-runner' || 'self-hosted, staging-runner' }}
+    needs: test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Build Docker image for migration
+        run: |
+          docker build -t etoubib-migration-build -f migration.dockerfile .
+
+  migration:
+    runs-on: ${{ github.ref == 'refs/heads/main' && 'self-hosted, production-runner' || 'self-hosted, staging-runner' }}
+    needs: build_for_migration
+    env:
+      DATABASE_URL: ${{ secrets.TYPEORM_URL }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run migration inside Docker container
+        run: |
+          docker run --env DATABASE_URL=$DATABASE_URL etoubib-migration-build
+
+  # build_app:
+  #   runs-on: self-hosted  # Specify the self-hosted runner here
+  #   needs: test
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v2
+
+  #     - name: Build Docker image for migration
+  #       run: |
+  #         docker build -t my-nestjs-app -f Dockerfile.build .
+
+  #     - name: Run migration inside Docker container
+  #       run: |
+  #         docker run --env DATABASE_URL=${{ secrets.DATABASE_URL }} my-nestjs-app pnpm run migration
+
+  # deploy:
+  #   runs-on: self-hosted
+  #   needs: build_app
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v2
+
+  #     - name: Log in to Amazon ECR
+  #       uses: aws-actions/amazon-ecr-login@v1
+
+  #     - name: Build Docker image
+  #       run: |
+  #         docker build -t my-nestjs-app .
+
+  #     - name: Tag Docker image
+  #       run: |
+  #         docker tag my-nestjs-app:latest ${{ secrets.AWS_ECR_REGISTRY }}/my-nestjs-app:latest
+
+  #     - name: Push Docker image to Amazon ECR
+  #       run: |
+  #         docker push ${{ secrets.AWS_ECR_REGISTRY }}/my-nestjs-app:latest
+
+  #     - name: SSH into EC2 and run the container
+  #       run: |
+  #         ssh -i ${{ secrets.EC2_SSH_KEY }} ec2-user@${{ secrets.EC2_PUBLIC_IP }} <<EOF
+  #           docker pull ${{ secrets.AWS_ECR_REGISTRY }}/my-nestjs-app:latest
+  #           docker run -d -p 3000:3000 ${{ secrets.AWS_ECR_REGISTRY }}/my-nestjs-app:latest
+  #         EOF
