@@ -17,6 +17,7 @@ export const getSourceSchema = (schema_type: SchemaType): DataSourceOptions => {
     schema_type === 'backoffice'
       ? getBoSourceOptions()
       : getCoreSourceOptions();
+  console.log('--- Source Schema:', sourceArgs);
   return {
     ...sourceArgs,
   };
