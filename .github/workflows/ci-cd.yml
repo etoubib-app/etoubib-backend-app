@@ -45,7 +45,7 @@ jobs:
 
       - name: Run migration inside Docker container
         run: |
-          docker run --env DATABASE_URL=$DATABASE_URL etoubib-migration-build
+          docker run etoubib-migration-build
 
   # build_app:
   #   runs-on: self-hosted  # Specify the self-hosted runner here
