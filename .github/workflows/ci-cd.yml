@@ -17,15 +17,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up Node.js 22.14.0
-        uses: actions/setup-node@v2
-        with:
-          node-version: '22.14.0'
-
-      - name: Install dependencies
-        run: |
-          npm install
-
       - name: Run unit tests (log for now)
         run: |
           echo "Running unit tests..."
@@ -33,7 +24,7 @@ jobs:
           # npm run test
 
   build_for_migration:
-    runs-on: ${{ github.ref == 'refs/heads/main' && 'self-hosted, production-runner' || 'self-hosted, staging-runner' }}
+    runs-on: ${{ github.ref == 'refs/heads/main' && 'self-hosted, production-runner' || 'self-hosted, staging' }}
     needs: test
     steps:
       - name: Checkout repository
