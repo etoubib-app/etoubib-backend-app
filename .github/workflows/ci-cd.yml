@@ -23,9 +23,28 @@ jobs:
           # we will add our test here in future
           # npm run test
 
+  set-environment: 
+      runs-on: ubuntu-latest 
+      needs: test
+      outputs: 
+        current_env: ${{ steps.set_env.outputs.current_env }}
+      steps:
+        - name: Check if prod
+          if: endsWith(github.ref, '/main') #if the triggering branch is 'main'
+          run: |
+            echo "ENVIRONMENT_NAME=production" >> $GITHUB_ENV
+        - name: Check if staging
+          if: endsWith(github.ref, '/staging') #if the triggering branch is 'dev'
+          run: |
+            echo "ENVIRONMENT_NAME=staging" >> $GITHUB_ENV
+        - name: Set output
+          id: set_env
+          run: echo "::set-output name=current_env::${{ env.ENVIRONMENT_NAME }}"
+
   build_for_migration:
     runs-on: self-hosted
-    needs: test
+    needs: set-environment
+    environment: ${{ needs.set-environment.outputs.current_env }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
