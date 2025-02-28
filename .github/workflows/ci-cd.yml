@@ -39,8 +39,9 @@ jobs:
             echo "ENVIRONMENT_NAME=staging" >> $GITHUB_ENV
         - name: Set output
           id: set_env
-          run: echo "{current_env}=${{ env.ENVIRONMENT_NAME }}" >> $GITHUB_OUTPUT
-
+          run: |
+            echo "current_env=${{ env.ENVIRONMENT_NAME }}" >> $GITHUB_OUTPUT
+  
   build_for_migration:
     runs-on: self-hosted
     needs: set-environment
@@ -54,10 +55,9 @@ jobs:
 
   migration:
     runs-on: self-hosted
-    needs: 
-      - build_for_migration
-      - set-environment
-    environment: staging
+    needs: [build_for_migration, set-environment]
+    environment: 
+      name: ${{ needs.set-environment.outputs.current_env }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
