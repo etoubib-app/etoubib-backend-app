@@ -17,6 +17,11 @@ export const getBoSourceOptions = (
   migrationsRun: false,
   logging: true,
   ssl: true,
+  extra: {
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  },
 });
 
 const BoDataSource = new DataSource(getBoSourceOptions());

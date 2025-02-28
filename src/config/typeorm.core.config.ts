@@ -16,6 +16,12 @@ export const getCoreSourceOptions = (
   migrations: ['src/database/migrations/core/*-migration.ts'],
   migrationsRun: false,
   logging: true,
+  ssl: true,
+  extra: {
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  },
 });
 
 const CoDataSource = new DataSource(getCoreSourceOptions());
