@@ -39,12 +39,11 @@ jobs:
             echo "ENVIRONMENT_NAME=staging" >> $GITHUB_ENV
         - name: Set output
           id: set_env
-          run: echo "::set-output name=current_env::${{ env.ENVIRONMENT_NAME }}"
+          run: echo "{current_env}=${{ env.ENVIRONMENT_NAME }}" >> $GITHUB_OUTPUT
 
   build_for_migration:
     runs-on: self-hosted
     needs: set-environment
-    environment: ${{ needs.set-environment.outputs.current_env }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -55,16 +54,17 @@ jobs:
 
   migration:
     runs-on: self-hosted
-    needs: build_for_migration
-    env:
-      TYPEORM_URL: ${{ secrets.TYPEORM_URL }}
+    needs: 
+      - build_for_migration
+      - set-environment
+    environment: ${{ needs.set-environment.outputs.current_env }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Run migration inside Docker container
         run: |
-          docker run etoubib-migration-build
+          docker run -e TYPEORM_URL=${{ secrets.TYPEORM_URL }} etoubib-migration-build
 
   # build_app:
   #   runs-on: self-hosted  # Specify the self-hosted runner here
