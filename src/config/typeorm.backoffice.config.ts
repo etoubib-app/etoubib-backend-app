@@ -16,6 +16,9 @@ export const getBoSourceOptions = (
   migrations: ['src/database/migrations/backoffice/*-migration.ts'],
   migrationsRun: false,
   logging: true,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 const BoDataSource = new DataSource(getBoSourceOptions());
