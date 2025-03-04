@@ -20,6 +20,12 @@ import { CoreModule } from './core/core.module';
         logging: true,
         autoLoadEntities: true,
         synchronize: false,
+        ssl: true,
+        extra: {
+          ssl: {
+            rejectUnauthorized: false,
+          },
+        },      
       }),
       inject: [ConfigService],
     }),
