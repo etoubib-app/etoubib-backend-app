@@ -59,7 +59,7 @@ jobs:
   migration:
     runs-on: self-hosted
     needs: [build_for_migration, set-environment]
-    environment: 
+    environment:
       name: ${{ needs.set-environment.outputs.current_env }}
     steps:
       - name: Checkout repository
@@ -119,4 +119,4 @@ jobs:
           docker ps -q --filter "name=${{ env.DOCKER_IMAGE }}" | xargs -r docker stop --time=30
 
           echo "Running the new Docker container..."
-          docker run -d -p 3000:3000 --name ${{ env.DOCKER_IMAGE }} ${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA
+          docker run -e TYPEORM_URL=${{ secrets.TYPEORM_URL }} -d -p 3000:3000 --name ${{ env.DOCKER_IMAGE }} ${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA
