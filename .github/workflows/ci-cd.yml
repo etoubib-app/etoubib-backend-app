@@ -131,7 +131,7 @@ jobs:
       - name: Check if Blue container exists
         id: check_blue
         run: |
-          if docker ps -a --format '{{.Names}}' | grep -q "^${{ env.DOCKER_IMAGE_BLUE }}$"; then
+          if docker ps -a --format '{{.Names}}' | grep -q "^${{ env.DOCKER_IMAGE }}$"; then
             echo "Blue container exists"
             echo "BLUE_EXISTS=true" >> $GITHUB_ENV
           else
@@ -160,15 +160,15 @@ jobs:
         run: |
           if [ "$BLUE_EXISTS" = "true" ]; then
             echo "Stopping and renaming Blue..."
-            docker stop ${{ env.DOCKER_IMAGE_BLUE }} --time=30 || true
-            docker rename ${{ env.DOCKER_IMAGE_GREEN }} ${{ env.DOCKER_IMAGE_BLUE }}
+            docker stop ${{ env.DOCKER_IMAGE }} --time=30 || true
+            docker rename ${{ env.DOCKER_IMAGE_GREEN }} ${{ env.DOCKER_IMAGE }}
           else
             echo "First deployment, no Blue container to swap."
-            docker rename ${{ env.DOCKER_IMAGE_GREEN }} ${{ env.DOCKER_IMAGE_BLUE }}
+            docker rename ${{ env.DOCKER_IMAGE_GREEN }} ${{ env.DOCKER_IMAGE }}
           fi
-          docker stop ${{ env.DOCKER_IMAGE_BLUE }}
-          docker rm ${{ env.DOCKER_IMAGE_BLUE }}
-          docker run -e TYPEORM_URL=${{ secrets.TYPEORM_URL }} -d -p 3000:3000 --name ${{ env.DOCKER_IMAGE_GREEN }} ${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA
+          docker stop ${{ env.DOCKER_IMAGE }}
+          docker rm ${{ env.DOCKER_IMAGE }}
+          docker run -e TYPEORM_URL=${{ secrets.TYPEORM_URL }} -d -p 3000:3000 --name ${{ env.DOCKER_IMAGE }} ${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA
 
       - name: Clean up Docker images
         run: |
