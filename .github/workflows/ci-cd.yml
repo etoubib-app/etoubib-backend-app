@@ -52,7 +52,7 @@ jobs:
       matrix:
         os: ${{ fromJSON(github.ref == 'refs/heads/main' && '["production"]' || '["staging"]') }}
     runs-on: ${{ matrix.os }}
-    needs: set-environment
+    needs: test
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -66,9 +66,9 @@ jobs:
       matrix:
         os: ${{ fromJSON(github.ref == 'refs/heads/main' && '["production"]' || '["staging"]') }}
     runs-on: ${{ matrix.os }}
-    needs: [build_for_migration, set-environment]
+    needs: [build_for_migration]
     environment:
-      name: ${{ needs.set-environment.outputs.current_env }}
+      name: ${{ matrix.os }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -82,9 +82,9 @@ jobs:
       matrix:
         os: ${{ fromJSON(github.ref == 'refs/heads/main' && '["production"]' || '["staging"]') }}
     runs-on: ${{ matrix.os }}
-    needs: [migration, set-environment]
+    needs: [migration]
     environment: 
-      name: ${{ needs.set-environment.outputs.current_env }}
+      name: ${{ matrix.os }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -117,9 +117,9 @@ jobs:
       matrix:
         os: ${{ fromJSON(github.ref == 'refs/heads/main' && '["production"]' || '["staging"]') }}
     runs-on: ${{ matrix.os }}
-    needs: [build_app, set-environment]
+    needs: [build_app]
     environment:
-      name: ${{ needs.set-environment.outputs.current_env }}
+      name: ${{ matrix.os }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
