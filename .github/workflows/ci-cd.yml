@@ -110,9 +110,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Stopping any existing containers...
+      - name: Stopping and Removing any existing containers...
         run: |
           docker ps -q --filter "name=${{ env.DOCKER_IMAGE }}" | xargs -r docker stop --time=30
+          docker ps -a -q --filter "name=${{ env.DOCKER_IMAGE }}" | xargs -r docker rm
       - name: Removing any existing containers...
         run: |
           docker rmi -f ${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA || true
