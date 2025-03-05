@@ -166,8 +166,10 @@ jobs:
             echo "First deployment, no Blue container to swap."
             docker rename ${{ env.DOCKER_IMAGE_GREEN }} ${{ env.DOCKER_IMAGE_BLUE }}
           fi
+          docker container update --publish-add 3000:3000 ${{ env.DOCKER_IMAGE_BLUE }}
+          docker container update --publish-rm 3001:3000 ${{ env.DOCKER_IMAGE_BLUE }}
 
       - name: Clean up Docker images
         run: |
-          docker system prune -f --volumes
+          docker system prune -a -f --volumes
         
