@@ -112,11 +112,14 @@ jobs:
 
       - name: Pull Docker image and deploy API
         run: |
-          echo "Pulling latest Docker image from ECR..."
-          docker pull ${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA
-
           echo "Stopping any existing containers..."
           docker ps -q --filter "name=${{ env.DOCKER_IMAGE }}" | xargs -r docker stop --time=30
+
+          echo "Removing any existing local Docker image..."
+          docker rmi -f ${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA || true
+          
+          echo "Pulling latest Docker image from ECR..."
+          docker pull ${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA
 
           echo "Running the new Docker container..."
           docker run -e TYPEORM_URL=${{ secrets.TYPEORM_URL }} -d -p 3000:3000 --name ${{ env.DOCKER_IMAGE }} ${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA
