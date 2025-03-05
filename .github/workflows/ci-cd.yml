@@ -92,14 +92,7 @@ jobs:
       - name: Build Docker image for app
         run: |
           docker build -t ${{ env.DOCKER_IMAGE }} .
-      
-      # - name: Set up AWS credentials
-      #   uses: aws-actions/configure-aws-credentials@v1
-      #   with:
-      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     aws-region: ${{ secrets.AWS_REGION }}
-      
+            
       - name: Login to Amazon ECR
         run: |
             aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REPOSITORY }}
@@ -159,14 +152,14 @@ jobs:
       - name: Switch Traffic to Green (Blue-Green Swap)
         run: |
           if [ "$BLUE_EXISTS" = "true" ]; then
-            echo "Stopping and renaming Blue..."
+            echo "Stopping and Deleting Blue..."
             docker stop ${{ env.DOCKER_IMAGE }} --time=30 || true
             docker rm ${{ env.DOCKER_IMAGE }} || true
-            docker rename ${{ env.DOCKER_IMAGE_GREEN }} ${{ env.DOCKER_IMAGE }}
           else
             echo "First deployment, no Blue container to swap."
-            docker rename ${{ env.DOCKER_IMAGE_GREEN }} ${{ env.DOCKER_IMAGE }}
           fi
+          docker stop ${{ env.DOCKER_IMAGE_GREEN }} --time=30 || true
+          docker rm ${{ env.DOCKER_IMAGE_GREEN }} || true
           docker run -e TYPEORM_URL=${{ secrets.TYPEORM_URL }} -d -p 3000:3000 --name ${{ env.DOCKER_IMAGE }} ${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA
 
   clear-docker:
