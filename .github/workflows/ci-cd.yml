@@ -50,7 +50,7 @@ jobs:
   build_for_migration:
     strategy:
       matrix:
-        os: ${{ fromJSON(github.ref == 'refs/heads/main' && '["self-hosted", "production"]' || '["self-hosted", "staging"]') }}
+        os: ${{ fromJSON(github.ref == 'refs/heads/main' && '["production"]' || '["staging"]') }}
     runs-on: ${{ matrix.os }}
     needs: set-environment
     steps:
@@ -64,7 +64,7 @@ jobs:
   migration:
     strategy:
       matrix:
-        os: ${{ fromJSON(github.ref == 'refs/heads/main' && '["self-hosted", "production"]' || '["self-hosted", "staging"]') }}
+        os: ${{ fromJSON(github.ref == 'refs/heads/main' && '["production"]' || '["staging"]') }}
     runs-on: ${{ matrix.os }}
     needs: [build_for_migration, set-environment]
     environment:
@@ -80,7 +80,7 @@ jobs:
   build_app:
     strategy:
       matrix:
-        os: ${{ fromJSON(github.ref == 'refs/heads/main' && '["self-hosted", "production"]' || '["self-hosted", "staging"]') }}
+        os: ${{ fromJSON(github.ref == 'refs/heads/main' && '["production"]' || '["staging"]') }}
     runs-on: ${{ matrix.os }}
     needs: [migration, set-environment]
     environment: 
@@ -115,7 +115,7 @@ jobs:
   deploy:
     strategy:
       matrix:
-        os: ${{ fromJSON(github.ref == 'refs/heads/main' && '["self-hosted", "production"]' || '["self-hosted", "staging"]') }}
+        os: ${{ fromJSON(github.ref == 'refs/heads/main' && '["production"]' || '["staging"]') }}
     runs-on: ${{ matrix.os }}
     needs: [build_app, set-environment]
     environment:
