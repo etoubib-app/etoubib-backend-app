@@ -166,8 +166,9 @@ jobs:
             echo "First deployment, no Blue container to swap."
             docker rename ${{ env.DOCKER_IMAGE_GREEN }} ${{ env.DOCKER_IMAGE_BLUE }}
           fi
-          docker container update --publish-add 3000:3000 ${{ env.DOCKER_IMAGE_BLUE }}
-          docker container update --publish-rm 3001:3000 ${{ env.DOCKER_IMAGE_BLUE }}
+          docker stop ${{ env.DOCKER_IMAGE_BLUE }}
+          docker rm ${{ env.DOCKER_IMAGE_BLUE }}
+          docker run -e TYPEORM_URL=${{ secrets.TYPEORM_URL }} -d -p 3000:3000 --name ${{ env.DOCKER_IMAGE_GREEN }} ${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA
 
       - name: Clean up Docker images
         run: |
