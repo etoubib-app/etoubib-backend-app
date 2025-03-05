@@ -6,8 +6,10 @@ import appConfig from '../config/app.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BackofficeModule } from './backoffice/backoffice.module';
 import { CoreModule } from './core/core.module';
+import { AppController } from './app.controller';
 
 @Module({
+  controllers: [AppController],
   imports: [
     ConfigModule.forRoot({
       load: [appConfig],

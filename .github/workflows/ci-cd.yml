@@ -12,6 +12,8 @@ on:
 
 env:
   DOCKER_IMAGE: etoubib-api
+  DOCKER_IMAGE_BLUE: etoubib-api-blue
+  DOCKER_IMAGE_GREEN: etoubib-api-green
 
 jobs:
   test:
@@ -110,16 +112,37 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Stopping and Removing any existing containers...
-        run: |
-          docker ps -q --filter "name=${{ env.DOCKER_IMAGE }}" | xargs -r docker stop --time=30
-          docker ps -a -q --filter "name=${{ env.DOCKER_IMAGE }}" | xargs -r docker rm
-      - name: Removing any existing containers...
-        run: |
-          docker rmi -f ${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA || true
+      # - name: Stopping and Removing any existing containers...
+      #   run: |
+      #     docker ps -q --filter "name=${{ env.DOCKER_IMAGE }}" | xargs -r docker stop --time=30
+      #     docker ps -a -q --filter "name=${{ env.DOCKER_IMAGE }}" | xargs -r docker rm
+      # - name: Removing any existing containers...
+      #   run: |
+      #     docker rmi -f ${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA || true
+
       - name: Pulling latest Docker image from ECR
         run: |
           docker pull ${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA
-      - name: Running the new Docker container
+      - name: Deploy Green container (new version)
         run: |
-          docker run -e TYPEORM_URL=${{ secrets.TYPEORM_URL }} -d -p 3000:3000 --name ${{ env.DOCKER_IMAGE }} ${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA
+          docker run -e TYPEORM_URL=${{ secrets.TYPEORM_URL }} -d -p 3001:3000 --name ${{ env.DOCKER_IMAGE_GREEN }} ${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA
+      - name: Health Check on Green Container
+        run: |
+          for i in {1..10}; do
+            if curl --fail http://localhost:3001/health-check; then
+              echo "Green container is healthy!"
+              exit 0
+            fi
+            echo "Waiting for Green container to be ready..."
+            sleep 5
+          done
+          echo "Green container failed health check"
+          exit 1
+      - name: Switch Traffic to Green (Blue-Green Swap)
+        run: |
+          docker stop ${{ env.DOCKER_IMAGE_BLUE }} --time=30 || true
+          docker rename ${{ env.DOCKER_IMAGE_GREEN }} ${{ env.DOCKER_IMAGE_BLUE }}
+      - name: Clean up Docker images
+        run: |
+          docker system prune -f --volumes
+        
