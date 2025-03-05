@@ -123,13 +123,23 @@ jobs:
       - name: Pulling latest Docker image from ECR
         run: |
           docker pull ${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA
+      - name: Check if Blue container exists
+        id: check_blue
+        run: |
+          if docker ps -a --format '{{.Names}}' | grep -q "^${{ env.DOCKER_IMAGE_BLUE }}$"; then
+            echo "Blue container exists"
+            echo "BLUE_EXISTS=true" >> $GITHUB_ENV
+          else
+            echo "No Blue container found (first deployment)"
+            echo "BLUE_EXISTS=false" >> $GITHUB_ENV
+          fi
       - name: Deploy Green container (new version)
         run: |
           docker run -e TYPEORM_URL=${{ secrets.TYPEORM_URL }} -d -p 3001:3000 --name ${{ env.DOCKER_IMAGE_GREEN }} ${{ secrets.ECR_REPOSITORY }}:$GITHUB_SHA
       - name: Health Check on Green Container
         run: |
           for i in {1..10}; do
-            if curl --fail http://localhost:3001/health-check; then
+            if curl --fail http://localhost:3001/api/health-check; then
               echo "Green container is healthy!"
               exit 0
             fi
@@ -140,8 +150,14 @@ jobs:
           exit 1
       - name: Switch Traffic to Green (Blue-Green Swap)
         run: |
-          docker stop ${{ env.DOCKER_IMAGE_BLUE }} --time=30 || true
-          docker rename ${{ env.DOCKER_IMAGE_GREEN }} ${{ env.DOCKER_IMAGE_BLUE }}
+          if [ "$BLUE_EXISTS" = "true" ]; then
+            echo "Stopping and renaming Blue..."
+            docker stop ${{ env.DOCKER_IMAGE_BLUE }} --time=30 || true
+            docker rename ${{ env.DOCKER_IMAGE_GREEN }} ${{ env.DOCKER_IMAGE_BLUE }}
+          else
+            echo "First deployment, no Blue container to swap."
+            docker rename ${{ env.DOCKER_IMAGE_GREEN }} ${{ env.DOCKER_IMAGE_BLUE }}
+          fi
       - name: Clean up Docker images
         run: |
           docker system prune -f --volumes
