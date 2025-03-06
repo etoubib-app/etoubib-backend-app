@@ -2,6 +2,8 @@ import { DataSource } from 'typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { ConfigService } from '@nestjs/config';
 import { config } from 'dotenv';
+import { AllBackofficeEntities } from '../entities/backoffice';
+import { getDBSourceOptions } from './typeorm.config';
 config();
 
 const configService = new ConfigService();
@@ -9,19 +11,9 @@ const configService = new ConfigService();
 export const getBoSourceOptions = (
   innerConfigService: ConfigService = configService,
 ): PostgresConnectionOptions => ({
-  type: 'postgres',
-  url: innerConfigService.get<string>('TYPEORM_URL'),
-  synchronize: false,
-  entities: ['**/apps/backoffice/**/*.entity.ts'],
-  migrations: ['src/database/migrations/backoffice/*-migration.ts'],
-  migrationsRun: false,
-  logging: true,
-  ssl: true,
-  extra: {
-    ssl: {
-      rejectUnauthorized: false,
-    },
-  },
+  ...getDBSourceOptions(innerConfigService),
+  entities: AllBackofficeEntities,
+  migrations: ['libs/shared/src/migrations/backoffice/*-migration.ts'],
 });
 
 const BoDataSource = new DataSource(getBoSourceOptions());

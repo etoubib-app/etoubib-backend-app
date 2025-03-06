@@ -2,6 +2,8 @@ import { DataSource } from 'typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { ConfigService } from '@nestjs/config';
 import { config } from 'dotenv';
+import { AllCoreEntities } from '../entities/core';
+import { getDBSourceOptions } from './typeorm.config';
 config();
 
 const configService = new ConfigService();
@@ -9,19 +11,9 @@ const configService = new ConfigService();
 export const getCoreSourceOptions = (
   innerConfigService: ConfigService = configService,
 ): PostgresConnectionOptions => ({
-  type: 'postgres',
-  url: innerConfigService.get<string>('TYPEORM_URL'),
-  synchronize: false,
-  entities: ['**/apps/core/**/*.entity.ts'],
-  migrations: ['src/database/migrations/core/*-migration.ts'],
-  migrationsRun: false,
-  logging: true,
-  ssl: true,
-  extra: {
-    ssl: {
-      rejectUnauthorized: false,
-    },
-  },
+  ...getDBSourceOptions(innerConfigService),
+  entities: AllCoreEntities,
+  migrations: ['libs/shared/src/migrations/core/*-migration.ts'],
 });
 
 const CoDataSource = new DataSource(getCoreSourceOptions());

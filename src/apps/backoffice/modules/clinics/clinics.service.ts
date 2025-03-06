@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { CreateClinicDto } from './dto/create-clinic.dto';
 import { UpdateClinicDto } from './dto/update-clinic.dto';
-import { Clinic } from './entities/clinic.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Clinic } from '@lib/shared';
 
 @Injectable()
 export class ClinicsService {

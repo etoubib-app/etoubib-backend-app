@@ -43,7 +43,7 @@ generateMigrations()
     );
     const filePath = path.join(
       __dirname,
-      `../../src/database/migrations/${schema_type}/${migration_timestamp}-migration.ts`,
+      `../../libs/shared/src/migrations/${schema_type}/${migration_timestamp}-migration.ts`,
     );
     fs.writeFileSync(filePath, fileContent);
     process.exit(0);

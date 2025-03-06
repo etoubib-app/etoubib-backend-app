@@ -1,7 +1,7 @@
 import { Inject, Injectable, Scope } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
-import { CoreUsers } from './entities/users.core.entity';
-import { CONNECTION } from '../../../../constants/app.constant';
+import { CONNECTION } from '../../constants/app.constant';
+import { CoreUsers } from '@lib/shared';
 
 @Injectable({ scope: Scope.REQUEST })
 export class CoreUsersService {

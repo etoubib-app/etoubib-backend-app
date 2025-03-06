@@ -1,7 +1,6 @@
 import { DataSourceOptions } from 'typeorm';
-import { getBoSourceOptions } from '../../src/config/typeorm.backoffice.config';
-import { getCoreSourceOptions } from '../../src/config/typeorm.core.config';
 import { SchemaType } from './migration.types';
+import { getBoSourceOptions, getCoreSourceOptions } from '@lib/shared';
 
 export const checkSchemaArg = (arg: string): SchemaType => {
   if (['backoffice', 'core'].includes(arg)) {

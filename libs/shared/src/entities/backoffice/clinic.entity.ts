@@ -7,4 +7,7 @@ export class Clinic {
 
   @Column({ unique: true })
   name: string;
+
+  @Column({ type: 'text', nullable: true })
+  lastName?: string;
 }

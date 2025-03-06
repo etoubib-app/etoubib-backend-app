@@ -1,6 +1,6 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { getSourceSchema } from './migration.helpers';
-import { Clinic } from '../../src/apps/backoffice/modules/clinics/entities/clinic.entity';
+import { Clinic } from '@lib/shared';
 
 runAllMigrations()
   .then(() => {

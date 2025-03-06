@@ -1,7 +1,7 @@
 import { NotFoundException } from '@nestjs/common';
-import { getCoreSourceOptions } from 'src/config/typeorm.core.config';
 import { DataSource } from 'typeorm';
-import { CoreUsers } from '../modules/users/entities/users.core.entity';
+import { getCoreSourceOptions } from '@lib/shared';
+import { AllCoreEntities } from '@lib/shared/entities/core';
 
 const connections = new Map<string, DataSource>();
 
@@ -35,7 +35,7 @@ export async function getTenantConnection(
     // Create a new DataSource instance
     const newDataSource = new DataSource({
       ...getCoreSourceOptions(),
-      entities: [CoreUsers],
+      entities: AllCoreEntities,
       migrations: undefined,
       name: schema_name,
       schema: schema_name,

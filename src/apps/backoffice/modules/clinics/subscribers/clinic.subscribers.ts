@@ -1,10 +1,10 @@
+import { Clinic } from '@lib/shared';
 import {
   DataSource,
   EntitySubscriberInterface,
   EventSubscriber,
   InsertEvent,
 } from 'typeorm';
-import { Clinic } from '../entities/clinic.entity';
 
 @EventSubscriber()
 export class DynamicSchemaSubscriber

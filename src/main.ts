@@ -3,8 +3,8 @@ import { AppModule } from './apps/app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { json, urlencoded } from 'body-parser';
-import { TransformInterceptor } from './interceptors/transform.interceptor';
 import { Logger, ValidationPipe } from '@nestjs/common';
+import { TransformInterceptor } from '@lib/shared';
 
 const globalPrefix = 'api';
 

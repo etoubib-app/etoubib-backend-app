@@ -1,10 +1,10 @@
 import { ForbiddenException, Module, Scope } from '@nestjs/common';
-import { CONNECTION } from 'src/constants/app.constant';
 import { getTenantConnection } from './connection';
 import { REQUEST } from '@nestjs/core';
+import { CONNECTION } from '../constants/app.constant';
 
 const connectionFactory = {
-  provide: CONNECTION, // is a symbol
+  provide: CONNECTION,
   scope: Scope.REQUEST,
   useFactory: async (request: Request) => {
     const schema_name = request.headers['x-tenant-id'] as string | undefined;
