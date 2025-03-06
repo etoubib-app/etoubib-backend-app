@@ -1,8 +1,9 @@
-import { Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { BackofficeController } from '@lib/shared';
+import { Body, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+
 import { ClinicsService } from './clinics.service';
 import { CreateClinicDto } from './dto/create-clinic.dto';
 import { UpdateClinicDto } from './dto/update-clinic.dto';
-import { BackofficeController } from '@lib/shared';
 
 @BackofficeController('clinics')
 export class ClinicsController {

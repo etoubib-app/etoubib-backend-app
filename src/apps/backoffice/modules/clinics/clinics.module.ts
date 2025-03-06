@@ -1,8 +1,9 @@
-import { Module } from '@nestjs/common';
-import { ClinicsService } from './clinics.service';
-import { ClinicsController } from './clinics.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { Clinic } from '@lib/shared';
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { ClinicsController } from './clinics.controller';
+import { ClinicsService } from './clinics.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Clinic])],

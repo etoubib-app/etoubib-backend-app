@@ -1,7 +1,7 @@
-import { NotFoundException } from '@nestjs/common';
-import { DataSource } from 'typeorm';
 import { getCoreSourceOptions } from '@lib/shared';
 import { AllCoreEntities } from '@lib/shared/entities/core';
+import { NotFoundException } from '@nestjs/common';
+import { DataSource } from 'typeorm';
 
 const connections = new Map<string, DataSource>();
 
@@ -20,10 +20,10 @@ export async function getTenantConnection(
       console.log(`Reinitializing connection for schema: ${schema_name}`);
       await existingConnection?.initialize();
       return existingConnection!;
-    } catch (err) {
+    } catch (error) {
       console.error(
         `Error reinitializing connection for schema: ${schema_name}`,
-        err,
+        error,
       );
       throw new NotFoundException(
         `Schema "${schema_name}" not found or failed to initialize`,
@@ -54,9 +54,9 @@ export async function getTenantConnection(
 
     connections.set(schema_name, newDataSource);
     return newDataSource;
-  } catch (err) {
-    console.log('Error creating connection', err);
-    console.error(err);
+  } catch (error) {
+    console.log('Error creating connection', error);
+    console.error(error);
     throw new NotFoundException(`Schema "${schema_name}" not found`);
   }
 }

@@ -1,6 +1,6 @@
-import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { ConfigService } from '@nestjs/config';
 import { config } from 'dotenv';
+import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 config();
 
 const configService = new ConfigService();

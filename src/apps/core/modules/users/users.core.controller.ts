@@ -1,6 +1,7 @@
-import { Get, Injectable, Param, Scope } from '@nestjs/common';
-import { CoreUsersService } from './users.core.service';
 import { CoreController } from '@lib/shared';
+import { Get, Injectable, Param, Scope } from '@nestjs/common';
+
+import { CoreUsersService } from './users.core.service';
 
 @Injectable({ scope: Scope.REQUEST })
 @CoreController('clinics')

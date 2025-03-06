@@ -1,7 +1,8 @@
 import { ForbiddenException, Module, Scope } from '@nestjs/common';
-import { getTenantConnection } from './connection';
 import { REQUEST } from '@nestjs/core';
+
 import { CONNECTION } from '../constants/app.constant';
+import { getTenantConnection } from './connection';
 
 const connectionFactory = {
   provide: CONNECTION,

@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
-import { DatabaseModule } from '../../tenancy/database.module';
-import { CoreUsersService } from './users.core.service';
-import { CoreUsersController } from './users.core.controller';
+
 import { CONNECTION } from '../../constants/app.constant';
+import { DatabaseModule } from '../../tenancy/database.module';
+import { CoreUsersController } from './users.core.controller';
+import { CoreUsersService } from './users.core.service';
 
 @Module({
   imports: [DatabaseModule], // Import CoreModule here

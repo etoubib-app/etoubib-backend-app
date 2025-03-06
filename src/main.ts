@@ -1,10 +1,11 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './apps/app.module';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ConfigService } from '@nestjs/config';
-import { json, urlencoded } from 'body-parser';
-import { Logger, ValidationPipe } from '@nestjs/common';
 import { TransformInterceptor } from '@lib/shared';
+import { Logger, ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { json, urlencoded } from 'body-parser';
+
+import { AppModule } from './apps/app.module';
 
 const globalPrefix = 'api';
 
