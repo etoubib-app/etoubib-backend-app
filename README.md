@@ -31,4 +31,4 @@ make run-in-docker COMMAND="migration-run"
 
 #### run specefic migration
 - migration-run
-  - this command will ask you which schema name you want to run migration for, it can be backoffice or core, your default dev schema, it also can be new schema you created for a clinic, in your local DB
+  - this command will ask you which schema name you want to run migration for, it can be backoffice or client, your default dev schema, it also can be new schema you created for a clinic, in your local DB

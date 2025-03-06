@@ -1,5 +1,5 @@
-import { getCoreSourceOptions } from '@lib/shared';
-import { AllCoreEntities } from '@lib/shared/entities/core';
+import { getClientSourceOptions } from '@lib/shared';
+import { AllClientEntities } from '@lib/shared/entities/client';
 import { NotFoundException } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 
@@ -34,8 +34,8 @@ export async function getTenantConnection(
   try {
     // Create a new DataSource instance
     const newDataSource = new DataSource({
-      ...getCoreSourceOptions(),
-      entities: AllCoreEntities,
+      ...getClientSourceOptions(),
+      entities: AllClientEntities,
       migrations: undefined,
       name: schema_name,
       schema: schema_name,

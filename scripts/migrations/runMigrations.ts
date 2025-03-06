@@ -30,7 +30,7 @@ async function runAllMigrations() {
     try {
       console.log(`--- Executing Migration for Clinic ${clinic.name} ---`);
       const clinicDataSource = new DataSource({
-        ...getSourceSchema('core'),
+        ...getSourceSchema('client'),
         schema: clinic.name,
       } as DataSourceOptions);
       await runMigration(clinicDataSource);

@@ -1,28 +1,28 @@
-import { CoreUsers } from '@lib/shared';
+import { ClientUsers } from '@lib/shared';
 import { Inject, Injectable, Scope } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 
 import { CONNECTION } from '../../constants/app.constant';
 
 @Injectable({ scope: Scope.REQUEST })
-export class CoreUsersService {
-  private readonly coreUsersRepository: Repository<CoreUsers>;
+export class ClientUsersService {
+  private readonly clientUsersRepository: Repository<ClientUsers>;
 
   constructor(@Inject(CONNECTION) connection: DataSource) {
-    this.coreUsersRepository = connection.getRepository(CoreUsers);
+    this.clientUsersRepository = connection.getRepository(ClientUsers);
   }
 
   findAll() {
-    return this.coreUsersRepository.find();
+    return this.clientUsersRepository.find();
   }
 
   async findOne(id: string) {
-    const result = (await this.coreUsersRepository.query(
+    const result = (await this.clientUsersRepository.query(
       'SELECT * FROM current_schema()',
     )) as unknown;
     console.log('result', result);
 
-    return this.coreUsersRepository.findOne({
+    return this.clientUsersRepository.findOne({
       where: { id },
     });
   }

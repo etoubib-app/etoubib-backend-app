@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AppController } from './app.controller';
 import { BackofficeModule } from './backoffice/backoffice.module';
-import { CoreModule } from './core/core.module';
+import { ClientModule } from './client/client.module';
 
 @Module({
   controllers: [AppController],
@@ -20,7 +20,7 @@ import { CoreModule } from './core/core.module';
       inject: [ConfigService],
     }),
     BackofficeModule,
-    CoreModule,
+    ClientModule,
   ],
 })
 export class AppModule {}

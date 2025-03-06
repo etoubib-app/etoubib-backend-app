@@ -2,7 +2,7 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import { camelCase } from 'typeorm/util/StringUtils';
 import * as fs from 'fs';
 import * as path from 'path';
-import { checkSchemaArg } from './migration.helpers';
+import { checkSchemaArgument } from './migration.helpers';
 import { getSourceSchema } from './migration.helpers';
 import { Query } from 'typeorm/driver/Query';
 import { SchemaType } from './migration.types';
@@ -11,13 +11,13 @@ import * as prettier from 'prettier';
 console.log('process.argv: ', process.argv);
 
 if (process.argv.length < 3) {
-  console.log('we need one argument (backoffice|core)');
+  console.log('we need one argument (backoffice|client)');
   process.exit(1);
 }
 
 const migration_timestamp = new Date().getTime();
 
-const schema_type = checkSchemaArg(process.argv[2]);
+const schema_type = checkSchemaArgument(process.argv[2]);
 
 const dataSource = new DataSource({
   ...getSourceSchema(schema_type),
@@ -77,7 +77,7 @@ async function generateMigrations() {
 }
 
 const setSchemaInQuery = (query: Query, schema: SchemaType) => {
-  if (schema === 'core') {
+  if (schema === 'client') {
     return `await queryRunner.query(\`${query.query.replace(/`/g, '\\`').replace(new RegExp(schema_type, 'g'), '${schema}')}\`${queryParams(query.parameters)});`;
   }
   return `await queryRunner.query(\`${query.query}\`${queryParams(query.parameters)});`;

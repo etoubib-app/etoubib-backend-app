@@ -1,1 +1,1 @@
-export type SchemaType = 'backoffice' | 'core';
+export type SchemaType = 'backoffice' | 'client';
