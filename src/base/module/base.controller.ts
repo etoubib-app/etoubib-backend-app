@@ -1,6 +1,7 @@
-import { Body, Get, Param, Patch, Post, Query } from '@nestjs/common';
-import { BaseEntity } from './base.entity';
+import { Body, Get, Param, Patch, Post } from '@nestjs/common';
 import { DeepPartial } from 'typeorm';
+
+import { BaseEntity } from './base.entity';
 import { IBaseService } from './base.service.interface';
 
 export abstract class BaseController<

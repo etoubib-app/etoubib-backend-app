@@ -1,23 +1,23 @@
 import { DataSourceOptions } from 'typeorm';
-import { getBoSourceOptions } from '../../src/config/typeorm.backoffice.config';
-import { getCoreSourceOptions } from '../../src/config/typeorm.core.config';
 import { SchemaType } from './migration.types';
+import { getBoSourceOptions, getClientSourceOptions } from '@lib/shared';
 
-export const checkSchemaArg = (arg: string): SchemaType => {
-  if (['backoffice', 'core'].includes(arg)) {
+export const checkSchemaArgument = (arg: string): SchemaType => {
+  if (['backoffice', 'client'].includes(arg)) {
     console.log(`Processing '${arg}' schema`);
     return arg as SchemaType;
   }
-  console.log('Please choose schema type can only be (backoffice) or (core)');
+  console.log('Please choose schema type can only be (backoffice) or (client)');
   process.exit(1);
 };
 
 export const getSourceSchema = (schema_type: SchemaType): DataSourceOptions => {
-  const sourceArgs =
+  const sourceArguments =
     schema_type === 'backoffice'
       ? getBoSourceOptions()
-      : getCoreSourceOptions();
+      : getClientSourceOptions();
+  console.log('--- Source Schema:', sourceArguments);
   return {
-    ...sourceArgs,
+    ...sourceArguments,
   };
 };

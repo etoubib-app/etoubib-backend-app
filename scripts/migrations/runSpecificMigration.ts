@@ -21,7 +21,7 @@ runSpecificMigration()
 async function runSpecificMigration() {
   const isBackoffice = schema_name === 'backoffice';
   const dataSource = new DataSource({
-    ...getSourceSchema(isBackoffice ? 'backoffice' : 'core'),
+    ...getSourceSchema(isBackoffice ? 'backoffice' : 'client'),
     schema: schema_name,
   } as DataSourceOptions);
   await checkSchemaExists(schema_name, dataSource);

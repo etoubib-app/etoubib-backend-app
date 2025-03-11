@@ -1,6 +1,6 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { getSourceSchema } from './migration.helpers';
-import { Clinic } from '../../src/apps/backoffice/modules/clinics/entities/clinic.entity';
+import { Clinic } from '@lib/shared';
 
 runAllMigrations()
   .then(() => {
@@ -30,7 +30,7 @@ async function runAllMigrations() {
     try {
       console.log(`--- Executing Migration for Clinic ${clinic.name} ---`);
       const clinicDataSource = new DataSource({
-        ...getSourceSchema('core'),
+        ...getSourceSchema('client'),
         schema: clinic.name,
       } as DataSourceOptions);
       await runMigration(clinicDataSource);

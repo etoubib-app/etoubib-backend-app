@@ -4,6 +4,7 @@ import {
   FindOneOptions,
   UpdateResult,
 } from 'typeorm';
+
 import { BaseEntity } from './base.entity';
 
 export interface IBaseService<

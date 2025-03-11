@@ -1,9 +1,9 @@
 import {
   CreateDateColumn,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
   DeleteDateColumn,
   ObjectLiteral,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 export class BaseEntity implements ObjectLiteral {
