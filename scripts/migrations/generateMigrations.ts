@@ -1,12 +1,13 @@
-import { DataSource, DataSourceOptions } from 'typeorm';
-import { camelCase } from 'typeorm/util/StringUtils';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as prettier from 'prettier';
+import { DataSource, DataSourceOptions } from 'typeorm';
+import { Query } from 'typeorm/driver/Query';
+import { camelCase } from 'typeorm/util/StringUtils';
+
 import { checkSchemaArgument } from './migration.helpers';
 import { getSourceSchema } from './migration.helpers';
-import { Query } from 'typeorm/driver/Query';
 import { SchemaType } from './migration.types';
-import * as prettier from 'prettier';
 
 console.log('process.argv: ', process.argv);
 
@@ -41,9 +42,18 @@ generateMigrations()
       downSqls.reverse(),
       schema_type,
     );
-    const filePath = path.join(
+    // Ensure migration directory exists
+    const migrationDirectory = path.join(
       __dirname,
-      `../../libs/shared/src/migrations/${schema_type}/${migration_timestamp}-migration.ts`,
+      `../../libs/shared/src/migrations/${schema_type}`,
+    );
+    if (!fs.existsSync(migrationDirectory)) {
+      fs.mkdirSync(migrationDirectory, { recursive: true });
+    }
+
+    const filePath = path.join(
+      migrationDirectory,
+      `${migration_timestamp}-migration.ts`,
     );
     fs.writeFileSync(filePath, fileContent);
     process.exit(0);
