@@ -1,11 +1,12 @@
-import { DataSourceOptions } from 'typeorm';
-import { SchemaType } from './migration.types';
 import { getBoSourceOptions, getClientSourceOptions } from '@lib/shared';
+import { DataSourceOptions } from 'typeorm';
 
-export const checkSchemaArgument = (arg: string): SchemaType => {
-  if (['backoffice', 'client'].includes(arg)) {
-    console.log(`Processing '${arg}' schema`);
-    return arg as SchemaType;
+import { SchemaType } from './migration.types';
+
+export const checkSchemaArgument = (argument: string): SchemaType => {
+  if (['backoffice', 'client'].includes(argument)) {
+    console.log(`Processing '${argument}' schema`);
+    return argument as SchemaType;
   }
   console.log('Please choose schema type can only be (backoffice) or (client)');
   process.exit(1);
