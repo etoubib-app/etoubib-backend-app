@@ -1,4 +1,4 @@
-import { ActivationStatus, Clinic, SchemaMigrationStatus } from '@lib/shared';
+import { Clinic } from '@lib/shared';
 import {
   ConflictException,
   forwardRef,
@@ -27,7 +27,7 @@ export class ClinicsService {
     try {
       await this.ClinicsRepository.manager.transaction(async (manager) => {
         const existingClinic = await manager.findOne(Clinic, {
-          where: { name },
+          where: { name: name as string },
         });
         if (existingClinic) {
           throw new ConflictException(
@@ -36,8 +36,8 @@ export class ClinicsService {
         }
         // Create a new clinic entity.
         clinic = manager.create(Clinic, {
-          name,
-          email,
+          name: name as string,
+          email: email as string,
         });
 
         // Save the clinic; save() returns the saved entity including createdAt.
@@ -53,7 +53,6 @@ export class ClinicsService {
       this.clinicEvent.emitMigrationStarted(clinic.id);
       // Emit an event to notify listeners that a clinic has been created.
       this.clinicEvent.emitClinicCreationUpdate(clinic.id);
-      clinic = await this.waitAndFetchUpdatedClinic(clinic.id);
       return clinic;
     } catch (error: unknown) {
       if ((error as { code?: string }).code === '23505') {
@@ -80,33 +79,6 @@ export class ClinicsService {
 
       throw new InternalServerErrorException('Unexpected error occurred.');
     }
-  }
-
-  private async waitAndFetchUpdatedClinic(clinicId: string): Promise<Clinic> {
-    // A simplified polling mechanism (example only)
-    // For production, consider using event-driven acknowledgments or promises
-    const maxRetries = 2;
-    const delay = (ms: number) =>
-      new Promise((resolve) => setTimeout(resolve, ms));
-
-    for (let index = 0; index < maxRetries; index++) {
-      await delay(500); // wait half a second per retry
-      const clinic = await this.ClinicsRepository.findOneBy({
-        id: clinicId,
-      });
-
-      if (
-        clinic &&
-        clinic.activationStatus === ActivationStatus.Running &&
-        clinic.migrationStatus === SchemaMigrationStatus.Completed &&
-        clinic.tenantId
-      ) {
-        return clinic; // updated successfully
-      }
-    }
-
-    // fallback if updates take too long (unlikely)
-    throw new Error('Timeout waiting for clinic to activate');
   }
 
   findAll() {
