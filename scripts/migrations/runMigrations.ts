@@ -47,7 +47,7 @@ async function runAllMigrations() {
   }
 }
 
-async function runMigration(dataSource: DataSource) {
+export async function runMigration(dataSource: DataSource) {
   try {
     await dataSource.initialize();
     await dataSource.runMigrations();
