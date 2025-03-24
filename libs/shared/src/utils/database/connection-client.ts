@@ -5,7 +5,7 @@ import { DataSource } from 'typeorm';
 
 const connections = new Map<string, DataSource>();
 
-export async function getTenantConnection(
+export async function getTenantConnectionClient(
   schema_name: string,
 ): Promise<DataSource> {
   if (connections.has(schema_name)) {
@@ -44,6 +44,8 @@ export async function getTenantConnection(
     console.log('Initializing connection...', newDataSource.options);
     await newDataSource.initialize();
     console.log('+++ schema initialized +++');
+    // Explicitly create schema if it doesn't exist
+    await newDataSource.query(`CREATE SCHEMA IF NOT EXISTS "${schema_name}"`);
     await newDataSource.query(`SET search_path TO "${schema_name}"`);
     const result = await newDataSource.query<{ schema: string }[]>(
       'SELECT current_schema() as schema',

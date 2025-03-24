@@ -1,12 +1,11 @@
+import { CONNECTION, DatabaseClientModule } from '@lib/shared';
 import { Module } from '@nestjs/common';
 
-import { CONNECTION } from '../../constants/app.constant';
-import { DatabaseModule } from '../../modules/database/database.module';
 import { ClientUsersController } from './users.client.controller';
 import { ClientUsersService } from './users.client.service';
 
 @Module({
-  imports: [DatabaseModule], // Import ClientModule here
+  imports: [DatabaseClientModule], // Import ClientModule here
   controllers: [ClientUsersController],
   providers: [
     {
@@ -14,7 +13,7 @@ import { ClientUsersService } from './users.client.service';
       useFactory: (ccs: ClientUsersService) => {
         return Promise.resolve(ccs);
       },
-      inject: [ClientUsersService, CONNECTION],
+      inject: [ClientUsersService, CONNECTION.CLIENT],
     },
     ClientUsersService,
   ],
