@@ -1,4 +1,4 @@
-import { TransformInterceptor } from '@lib/shared';
+import { HttpExceptionFilter, TransformInterceptor } from '@lib/shared';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
@@ -15,6 +15,7 @@ async function bootstrap() {
   app
     .setGlobalPrefix(globalPrefix)
     .useGlobalInterceptors(new TransformInterceptor())
+    .useGlobalFilters(new HttpExceptionFilter())
     .useGlobalPipes(
       new ValidationPipe({
         transform: true,
