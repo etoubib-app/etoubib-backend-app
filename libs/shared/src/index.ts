@@ -3,3 +3,7 @@ export * from './decorators';
 export * from './entities/backoffice';
 export * from './entities/client';
 export * from './interceptors';
+export * from './exceptions';
+export * from './filters';
+export * from './helpers';
+export * from './constants';
