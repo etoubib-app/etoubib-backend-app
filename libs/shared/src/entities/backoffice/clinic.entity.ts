@@ -24,7 +24,11 @@ export class Clinic {
   @Column({ type: 'varchar', default: ActivationStatus.Pending })
   activationStatus: ActivationStatus;
 
-  @Column({ type: 'varchar', default: SchemaMigrationStatus.Pending })
+  @Column({
+    type: 'varchar',
+    default: SchemaMigrationStatus.Pending,
+    nullable: true,
+  })
   migrationStatus: SchemaMigrationStatus;
 
   @CreateDateColumn()
@@ -33,3 +37,11 @@ export class Clinic {
   @UpdateDateColumn()
   updatedAt: Date;
 }
+
+/*
+stages:
+
+pending -> migration-init -> migration-success -> seed-init -> seed-success -> ready
+                          -> migration-failed
+                                                            -> seed-failed
+*/

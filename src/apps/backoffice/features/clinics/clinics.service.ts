@@ -27,7 +27,7 @@ export class ClinicsService {
     try {
       await this.ClinicsRepository.manager.transaction(async (manager) => {
         const existingClinic = await manager.findOne(Clinic, {
-          where: { name: name as string },
+          where: { name },
         });
         if (existingClinic) {
           throw new ConflictException(
@@ -36,8 +36,8 @@ export class ClinicsService {
         }
         // Create a new clinic entity.
         clinic = manager.create(Clinic, {
-          name: name as string,
-          email: email as string,
+          name,
+          email,
         });
 
         // Save the clinic; save() returns the saved entity including createdAt.

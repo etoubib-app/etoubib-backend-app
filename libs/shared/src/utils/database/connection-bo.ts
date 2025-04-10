@@ -1,11 +1,14 @@
-import { AllBackofficeEntities, getBoSourceOptions } from '@lib/shared';
+import {
+  AllBackofficeEntities,
+  CONNECTION,
+  getBoSourceOptions,
+} from '@lib/shared';
 import { NotFoundException } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 
-export async function getTenantConnectionBO(
-  schema_name: string,
-): Promise<DataSource> {
+export async function getTenantConnectionBO(): Promise<DataSource> {
   try {
+    const schema_name = CONNECTION.BO;
     // Create a new DataSource instance
     const newDataSource = new DataSource({
       ...getBoSourceOptions(),

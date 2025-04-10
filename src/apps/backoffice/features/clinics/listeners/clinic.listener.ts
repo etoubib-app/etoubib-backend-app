@@ -1,7 +1,7 @@
 import {
   ActivationStatus,
   Clinic,
-  generateId,
+  generate_clinic_tenant_id,
   SchemaMigrationStatus,
 } from '@lib/shared';
 import { getTenantConnectionClient } from '@lib/shared/utils/database/connection-client';
@@ -27,7 +27,7 @@ export class ClinicListener {
       const clinic = await this.clinicRepo.findOneBy({ id: payload.clinicId });
       if (!clinic) throw new Error('Clinic not found');
       if (!clinic.tenantId) {
-        this.generateClinicTenantId(clinic);
+        generate_clinic_tenant_id(clinic);
       }
       const schemaName = clinic.tenantId;
       console.log(`Migration started for Clinic ${payload.clinicId}`);
@@ -62,7 +62,7 @@ export class ClinicListener {
       const clinic = await this.clinicRepo.findOneBy({ id: payload.clinicId });
       if (!clinic) return;
       if (!clinic.tenantId) {
-        this.generateClinicTenantId(clinic);
+        generate_clinic_tenant_id(clinic);
       }
       clinic.migrationStatus = SchemaMigrationStatus.Running;
       await this.clinicRepo.save(clinic);
@@ -79,7 +79,7 @@ export class ClinicListener {
       const clinic = await this.clinicRepo.findOneBy({ id: payload.clinicId });
       if (!clinic) return;
       if (!clinic.tenantId) {
-        this.generateClinicTenantId(clinic);
+        generate_clinic_tenant_id(clinic);
       }
       clinic.activationStatus = ActivationStatus.Running;
       clinic.migrationStatus = SchemaMigrationStatus.Completed;
@@ -97,7 +97,7 @@ export class ClinicListener {
       const clinic = await this.clinicRepo.findOneBy({ id: payload.clinicId });
       if (!clinic) return;
       if (!clinic.tenantId) {
-        this.generateClinicTenantId(clinic);
+        generate_clinic_tenant_id(clinic);
       }
       clinic.activationStatus = ActivationStatus.Stopped;
       clinic.migrationStatus = SchemaMigrationStatus.Failed;
@@ -107,14 +107,4 @@ export class ClinicListener {
       console.error('Error updating clinic activation status:', error);
     }
   }
-
-  // generate a function accept argument Clinic and return a Repository<Clinic>
-  private generateClinicTenantId = (clinic: Clinic) => {
-    // Check if the name has spaces and and all characters with lowerCase replace them with a dash
-    clinic.name = clinic.name.replace(/\s/g, '-').toLowerCase();
-    // Generate the tenantId using the clinic's name and the database-created timestamp
-    clinic.tenantId = generateId(clinic.name, new Date(clinic.createdAt));
-
-    console.log('Generated tenantId:', clinic.tenantId);
-  };
 }
