@@ -1,15 +1,33 @@
-import { BackofficeController } from '@lib/shared';
-import { Body, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { BackofficeController, Clinic } from '@lib/shared';
+import {
+  Body,
+  Delete,
+  Get,
+  Injectable,
+  Param,
+  Patch,
+  Post,
+  Scope,
+} from '@nestjs/common';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 import { ClinicsService } from './clinics.service';
 import { CreateClinicDto } from './dto/create-clinic.dto';
 import { UpdateClinicDto } from './dto/update-clinic.dto';
 
+@Injectable({ scope: Scope.DEFAULT })
 @BackofficeController('clinics')
 export class ClinicsController {
   constructor(private readonly clinicsService: ClinicsService) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create a clinic and run its migration' })
+  @ApiResponse({
+    status: 201,
+    description:
+      'The clinic has been created and migration executed successfully.',
+    type: Clinic,
+  })
   create(@Body() createClinicDto: CreateClinicDto) {
     return this.clinicsService.create(createClinicDto);
   }
