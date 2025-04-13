@@ -9,7 +9,7 @@ const connections = new Map<string, DataSource>();
 export async function getTenantConnection(
   schema_name: string,
 ): Promise<DataSource> {
-  // TODO: issue with the caching
+  // TODO: issue with caching
   // if (connections.has(schema_name)) {
   //   console.log(`Connection for schema: ${schema_name} already exists`);
   //   const existingConnection = connections.get(schema_name);
@@ -29,7 +29,7 @@ export async function getTenantConnection(
   //     );
   //     throw new NotFoundException({
   //       error_code: ExceptionErrorType.TenantNotFound,
-  //       message: `Tenant ID "${schema_name}" not found or failed to initialize`
+  //       message: `Tenant ID not found or failed to initialize`
   //     });
   //   }
   // }
@@ -43,6 +43,7 @@ export async function getTenantConnection(
       migrations: undefined,
       name: safeSchema,
       schema: safeSchema,
+      logging: false,
       poolSize: 1,
     });
     console.log('Initializing connection...', newDataSource.options);
@@ -56,7 +57,7 @@ export async function getTenantConnection(
     if (result[0].schema !== safeSchema) {
       throw new NotFoundException({
         error_code: ExceptionErrorType.TenantNotFound,
-        message: `Tenant ID "${safeSchema}" not found`
+        message: `Tenant ID not found`
       });
     }
 
@@ -67,7 +68,7 @@ export async function getTenantConnection(
     console.error(error);
     throw new NotFoundException({
       error_code: ExceptionErrorType.TenantNotFound,
-      message: `Tenant ID "${safeSchema}" not found`
+      message: `Tenant ID not found`
     });
   }
 }

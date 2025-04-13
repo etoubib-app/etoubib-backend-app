@@ -4,7 +4,8 @@ import { getBoSourceOptions } from '@lib/shared/config';
 import { Module } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 
-export const BO_SCHEMA_NAME = "backoffice"
+const BO_SCHEMA = "backoffice"
+
 const boConnectionFactory = {
   provide: BACKOFFICE_CONNECTION,
   useFactory: async (): Promise<DataSource> => {
@@ -12,8 +13,8 @@ const boConnectionFactory = {
       ...getBoSourceOptions(),
       entities: AllBackofficeEntities,
       migrations: undefined,
-      schema: BO_SCHEMA_NAME,
-      name: BO_SCHEMA_NAME,
+      schema: BO_SCHEMA,
+      name: BO_SCHEMA,
       poolSize: 1,
     });
   },

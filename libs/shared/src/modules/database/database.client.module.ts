@@ -1,13 +1,12 @@
-import { BadRequestException, Module, Scope } from '@nestjs/common';
+import { Module, Scope, UnauthorizedException } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 
-import { JWTAuthModule } from '@lib/shared/modules/jwt-auth/jwt-auth.module';
-import { JWTAuthHelper } from '@lib/shared/modules/jwt-auth/jwt-auth.helper';
-import { ExceptionErrorType } from '@lib/shared/types';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CLIENT_CONNECTION } from './database.constant';
-import { TClientJwtPayload } from 'src/apps/client/features/auth/types';
 import { getTenantConnection } from './connection.client';
+import { TClientJwtPayload } from 'src/apps/client/features/auth/types';
+import { JWTAuthHelper } from '../jwt-auth/jwt-auth.helper';
+import { JWTAuthModule } from '../jwt-auth/jwt-auth.module';
 
 const clientConnectionFactory = {
   scope: Scope.REQUEST,
@@ -18,16 +17,13 @@ const clientConnectionFactory = {
 
     if (authorization) {
       const token = authorization.split(" ")?.[1]
-      const secret = config.getOrThrow<string>('JWT_AUTH_SECRET');
+      const secret = config.getOrThrow<string>('jwt.client.secret');
       const payload = jwtAuthHelper.verifyToken({ token, secret: secret! })
-      return getTenantConnection(payload.tenantId);
+      return await getTenantConnection(payload.tenantId);
     } else if (schemaName) {
-      return getTenantConnection(schemaName);
+      return await getTenantConnection(schemaName);
     } else {
-      throw new BadRequestException({
-        error_code: ExceptionErrorType.TenantIsRequired,
-        message: "Tenant ID must be provided",
-      });
+      throw new UnauthorizedException();
     }
   },
   inject: [REQUEST, JWTAuthHelper, ConfigService],
