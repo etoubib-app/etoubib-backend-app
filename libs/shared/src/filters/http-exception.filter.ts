@@ -12,7 +12,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
     catch(exception: HttpException, host: ArgumentsHost) {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
-        const request = ctx.getRequest<Request>();
 
         const statusCode = exception.getStatus
             ? exception.getStatus()
@@ -28,10 +27,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
             error_code: errorCode,
             message: errorMessage,
             errors: validatorsErrors,
-            meta: {
-                path: request.url,
-                timestamp: new Date().toISOString(),
-            }
+            timestamp: new Date().toISOString(),
         });
     }
 }
