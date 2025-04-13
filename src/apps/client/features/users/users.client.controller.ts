@@ -1,7 +1,7 @@
 import { ClientController } from '@lib/shared';
 import { Body, Get, Injectable, Post, Scope, UseGuards } from '@nestjs/common';
 
-import { ClientUserService } from './services/users.client.service';
+import { ClientUsersApiService } from './services';
 import { ApiConflictResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ClientCreateUserDto, ClientUserResponseDto } from './dtos';
 import { ClientJwtAuthGuard } from '../auth/guards/jwt-auth.client.guard';
@@ -12,13 +12,13 @@ import { ApiResponseWithData } from '@lib/shared/decorators';
 @Injectable({ scope: Scope.REQUEST })
 @ClientController('users')
 export class ClientUserController {
-  constructor(private readonly clientUserService: ClientUserService) { }
+  constructor(private readonly clientUsersApiService: ClientUsersApiService) { }
 
   @ApiOperation({ description: 'Clinic users list' })
   @ApiResponseWithData(ClientUserResponseDto, { isArray: true })
   @Get()
   public getUsers() {
-    return this.clientUserService.getUsers("toDto");
+    return this.clientUsersApiService.getUsers("toDto");
   }
 
   @ApiOperation({ description: 'Create new clinic user' })
@@ -26,6 +26,6 @@ export class ClientUserController {
   @ApiConflictResponse({ description: 'User already exists' })
   @Post()
   public createUser(@Body() UserDto: ClientCreateUserDto) {
-    return this.clientUserService.createUser(UserDto, "toDto");
+    return this.clientUsersApiService.createUser(UserDto, "toDto");
   }
 }
