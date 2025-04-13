@@ -7,23 +7,40 @@ import { type TClientUserStatus, ClientUserStatus } from '@lib/shared/enums/clie
 
 @Entity({ name: "users" })
 export class ClientUserEntity extends BaseEntity {
-  @Column({ type: "varchar", length: 255 })
+  @Column({
+    type: "varchar",
+    name: 'first_name',
+    length: 255
+  })
   firstName: string;
 
-  @Column({ type: "varchar", length: 255, nullable: true })
+  @Column({
+    type: "varchar",
+    name: 'last_name',
+    length: 255,
+    nullable: true
+  })
   lastName?: string;
 
   @Column({ unique: true, type: "varchar", length: 255 })
   email: string;
 
-  @Column({ type: "varchar", length: 255 })
+  @Column({
+    type: "varchar",
+    name: 'password',
+    length: 255
+  })
   @Exclude()
   private _password: string;
 
   @Column({ type: 'varchar', default: ClientUserStatus.active })
   status: TClientUserStatus;
 
-  @Column({ type: 'boolean', default: false })
+  @Column({
+    type: 'boolean',
+    name: 'is_owner',
+    default: false
+  })
   isOwner: boolean;
 
   // TODO: add user role fk

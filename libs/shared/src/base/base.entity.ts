@@ -5,6 +5,7 @@ export abstract class BaseEntity {
     id: string;
 
     @CreateDateColumn({
+        name: 'created_at',
         type: 'timestamp with time zone',
         default: 'now()',
         update: false,
@@ -13,6 +14,7 @@ export abstract class BaseEntity {
     createdAt: Date;
 
     @UpdateDateColumn({
+        name: 'updated_at',
         type: 'timestamp with time zone',
         default: 'now()',
         onUpdate: 'now()',
