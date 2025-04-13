@@ -48,7 +48,8 @@ export async function getTenantConnection(
     console.log('Initializing connection...', newDataSource.options);
     await newDataSource.initialize();
     console.log('+++ schema initialized +++');
-    await newDataSource.query(`SET search_path TO "${safeSchema}"`);
+    // await newDataSource.query(`CREATE SCHEMA IF NOT EXISTS "${schema_name}"`); // TODO: fixme
+    await newDataSource.query(`SET search_path TO "${schema_name}"`);
     const result = await newDataSource.query<{ schema: string }[]>(
       'SELECT current_schema() as schema',
     );

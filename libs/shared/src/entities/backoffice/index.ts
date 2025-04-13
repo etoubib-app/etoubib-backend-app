@@ -1,4 +1,4 @@
-import { Clinic } from './clinic.entity';
-export * from './clinic.entity';
+import { BoClinic } from './clinics.entity';
+export * from './clinics.entity';
 
-export const AllBackofficeEntities = [Clinic];
+export const AllBackofficeEntities = [BoClinic];

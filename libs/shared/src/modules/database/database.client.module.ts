@@ -1,13 +1,13 @@
 import { BadRequestException, Module, Scope } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 
-import { CLIENT_CONNECTION } from '../../constants/app.constant';
-import { getTenantConnection } from './connection';
 import { JWTAuthModule } from '@lib/shared/modules/jwt-auth/jwt-auth.module';
 import { JWTAuthHelper } from '@lib/shared/modules/jwt-auth/jwt-auth.helper';
-import { TClientJwtPayload } from '../../features/auth/types';
 import { ExceptionErrorType } from '@lib/shared/types';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { CLIENT_CONNECTION } from './database.constant';
+import { TClientJwtPayload } from 'src/apps/client/features/auth/types';
+import { getTenantConnection } from './connection.client';
 
 const clientConnectionFactory = {
   scope: Scope.REQUEST,
@@ -38,4 +38,4 @@ const clientConnectionFactory = {
   providers: [clientConnectionFactory],
   exports: [CLIENT_CONNECTION],
 })
-export class DatabaseModule { }
+export class ClientDatabaseModule { }

@@ -4,11 +4,11 @@ import { ConfigService } from '@nestjs/config';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ClientUserEntity, InvalidTokenException } from '@lib/shared';
 import { TClientJwtPayload } from '../types';
-import { getTenantEntityManager } from 'src/apps/client/modules/database/connection';
 import { ClientUserStatus } from '@lib/shared/enums/client';
 import { ExceptionErrorType } from '@lib/shared/types';
 import { ClientUserMapper } from '../../users/users.client.mapper';
 import { ClientUserWithRelationsResponseDto } from '../../users/dtos';
+import { getTenantEntityManager } from '@lib/shared/modules';
 
 @Injectable()
 export class ClientJwtStrategy extends PassportStrategy(Strategy) {

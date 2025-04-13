@@ -1,6 +1,5 @@
 import { ClientUserEntity, InvalidCredentialsException } from "@lib/shared";
 import { BadRequestException, Inject, Injectable, Scope } from "@nestjs/common";
-import { CLIENT_CONNECTION } from "src/apps/client/constants/app.constant";
 import { DataSource, Repository } from "typeorm";
 import { ClientUserLoginDto, ClientUserLoginResponseDto } from "../dtos";
 import { TClientJwtPayload } from "../types";
@@ -10,6 +9,7 @@ import { ConfigService } from "@nestjs/config";
 import { ClientUserService } from "../../users/services/users.client.service";
 import { REQUEST } from "@nestjs/core";
 import { ExceptionErrorType } from "@lib/shared/types";
+import { CLIENT_CONNECTION } from "@lib/shared/modules";
 
 @Injectable({ scope: Scope.REQUEST })
 export class ClientAuthService {

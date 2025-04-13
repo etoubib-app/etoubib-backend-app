@@ -1,4 +1,4 @@
-import { ExtractEnumTypes } from "../../helpers";
+import { ExtractEnumTypes } from "@lib/shared/helpers";
 
 export const ClientUserStatus = {
     active: 'active',

@@ -1,3 +1,0 @@
-// TODO :
-export const BO_CONNECTION = 'BO_CONNECTION';
-export const CLIENT_CONNECTION = 'CLIENT_CONNECTION';

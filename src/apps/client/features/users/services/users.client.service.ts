@@ -2,11 +2,11 @@ import { ClientUserEntity, ForeignKeyConflictException, UserExistsException } fr
 import { Inject, Injectable, InternalServerErrorException, NotFoundException, Scope, UnauthorizedException } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 
-import { CLIENT_CONNECTION } from '../../../constants/app.constant';
 import { ClientCreateUserDto } from '../dtos';
 import { ClientUserMapper, TClientUserMapperResponse } from '../users.client.mapper';
 import { DBErrorCode, ExceptionErrorType } from '@lib/shared/types';
 import { ClientUserStatus } from '@lib/shared/enums/client';
+import { CLIENT_CONNECTION } from '@lib/shared/modules';
 import { TBaseMapperFormat } from '@lib/shared/base';
 
 @Injectable({ scope: Scope.REQUEST })
