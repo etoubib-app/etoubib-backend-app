@@ -17,7 +17,7 @@ export class ClientAuthController {
   @ApiResponseWithData(ClientUserLoginResponseDto)
   @ApiUnauthorizedResponse({ description: 'Invalid credentials' })
   @HttpCode(HttpStatus.OK)
-  @Post('/login')
+  @Post('login')
   login(@Body() userLoginDto: ClientUserLoginDto): Promise<ClientUserLoginResponseDto> {
     return this.authService.login(userLoginDto);
   }

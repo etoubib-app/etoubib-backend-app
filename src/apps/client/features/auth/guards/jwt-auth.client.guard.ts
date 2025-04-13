@@ -1,10 +1,10 @@
-import { Injectable, ExecutionContext } from '@nestjs/common';
+import { Injectable, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ExtractJwt } from 'passport-jwt';
 import { InvalidTokenException } from '@lib/shared/exceptions';
-import { JWTAuthHelper } from '@lib/shared/modules/jwt-auth/jwt-auth.helper';
 import { TClientJwtPayload } from '../types';
 import { ConfigService } from '@nestjs/config';
+import { JWTAuthHelper } from '@lib/shared/modules';
 
 @Injectable()
 export class ClientJwtAuthGuard extends AuthGuard('jwt') {
@@ -17,9 +17,9 @@ export class ClientJwtAuthGuard extends AuthGuard('jwt') {
 
     canActivate(context: ExecutionContext) {
         const accessToken = ExtractJwt.fromAuthHeaderAsBearerToken()(context.switchToHttp().getRequest());
-        if (!accessToken) throw new InvalidTokenException();
+        if (!accessToken) throw new UnauthorizedException({ message: "Token is not provided" });
 
-        const secret = this.configService.getOrThrow<string>('JWT_AUTH_SECRET');
+        const secret = this.configService.getOrThrow<string>('jwt.client.secret');
         this.jwtAuthHelper.verifyToken({ token: accessToken, secret: secret! });
 
         return super.canActivate(context);

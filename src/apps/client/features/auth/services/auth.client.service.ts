@@ -1,26 +1,24 @@
 import { ClientUserEntity, InvalidCredentialsException } from "@lib/shared";
-import { BadRequestException, Inject, Injectable, Scope } from "@nestjs/common";
+import { Inject, Injectable, Scope, UnauthorizedException } from "@nestjs/common";
 import { DataSource, Repository } from "typeorm";
 import { ClientUserLoginDto, ClientUserLoginResponseDto } from "../dtos";
 import { TClientJwtPayload } from "../types";
 import { ClientUserMapper } from "../../users/users.client.mapper";
-import { JWTAuthHelper } from "@lib/shared/modules/jwt-auth/jwt-auth.helper";
 import { ConfigService } from "@nestjs/config";
-import { ClientUserService } from "../../users/services/users.client.service";
 import { REQUEST } from "@nestjs/core";
 import { ExceptionErrorType } from "@lib/shared/types";
-import { CLIENT_CONNECTION } from "@lib/shared/modules";
+import { ClientUsersService } from "../../users/services";
+import { CLIENT_CONNECTION, getTenantConnection, JWTAuthHelper } from "@lib/shared/modules";
 
 @Injectable({ scope: Scope.REQUEST })
 export class ClientAuthService {
-    private readonly clientUserRepository: Repository<ClientUserEntity>;
+    protected readonly clientUserRepository: Repository<ClientUserEntity>;
 
     constructor(
-        @Inject(REQUEST) private request: Request,
-        private readonly configService: ConfigService,
+        @Inject(REQUEST) protected request: Request,
+        protected readonly configService: ConfigService,
         @Inject(CLIENT_CONNECTION) connection: DataSource,
-        private readonly clientUserService: ClientUserService,
-        private readonly jwtAuthHelper: JWTAuthHelper<TClientJwtPayload>
+        protected readonly jwtAuthHelper: JWTAuthHelper<TClientJwtPayload>
     ) {
         this.clientUserRepository = connection.getRepository(ClientUserEntity);
     }
@@ -28,7 +26,7 @@ export class ClientAuthService {
     async login({ email, password, remember_me }: ClientUserLoginDto): Promise<ClientUserLoginResponseDto> {
         const tenantId = this.request.headers['x-tenant-id']
         if (!tenantId)
-            throw new BadRequestException({
+            throw new UnauthorizedException({
                 error_code: ExceptionErrorType.TenantIsRequired,
                 message: "Tenant ID must be provided",
             });;
@@ -39,14 +37,15 @@ export class ClientAuthService {
         const passwordMatched = await user.checkPassword(password);
         if (!passwordMatched) throw new InvalidCredentialsException();
 
-        // check user account status
-        this.clientUserService.checkUserStatus(user)
+        const tenantConnection = await getTenantConnection(tenantId);
+        const clientUserService = new ClientUsersService(tenantConnection)
+        clientUserService.checkUserStatus(user)
 
         // generate token
-        const secret = this.configService.getOrThrow<string>('JWT_AUTH_SECRET')
+        const secret = this.configService.getOrThrow<string>('jwt.client.secret')
         const expiresIn = remember_me ?
-            this.configService.getOrThrow<string>('REMEMBER_ME_ACCESS_TOKEN_EXPIRES_IN') :
-            this.configService.getOrThrow<string>('ACCESS_TOKEN_EXPIRES_IN');
+            this.configService.getOrThrow<string>('jwt.client.remember_expires_in') :
+            this.configService.getOrThrow<string>('jwt.client.expires_in');
         const payload: TClientJwtPayload = { userId: user.id, tenantId };
         const token = this.jwtAuthHelper.generateAccessToken({ payload, secret: secret!, expiresIn: expiresIn! });
 

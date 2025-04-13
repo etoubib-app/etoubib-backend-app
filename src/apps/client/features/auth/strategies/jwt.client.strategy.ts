@@ -1,44 +1,32 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ClientUserEntity, InvalidTokenException } from '@lib/shared';
 import { TClientJwtPayload } from '../types';
-import { ClientUserStatus } from '@lib/shared/enums/client';
-import { ExceptionErrorType } from '@lib/shared/types';
 import { ClientUserMapper } from '../../users/users.client.mapper';
 import { ClientUserWithRelationsResponseDto } from '../../users/dtos';
-import { getTenantEntityManager } from '@lib/shared/modules';
+import { getTenantConnection } from '@lib/shared/modules';
+import { ClientUsersService } from '../../users/services';
 
 @Injectable()
 export class ClientJwtStrategy extends PassportStrategy(Strategy) {
     constructor(protected readonly configService: ConfigService) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            secretOrKey: configService.getOrThrow<string>('JWT_AUTH_SECRET')!,
+            secretOrKey: configService.getOrThrow<string>('jwt.client.secret')!,
             ignoreExpiration: false,
         });
     }
 
     async validate({ userId, tenantId }: TClientJwtPayload): Promise<ClientUserWithRelationsResponseDto> {
-        const entityManager = await getTenantEntityManager(tenantId);  // TODO: use DI instead
-        const user = await entityManager.getRepository(ClientUserEntity).findOneBy({ id: userId });
+        const tenantConnection = await getTenantConnection(tenantId);
+        const user = await tenantConnection.getRepository(ClientUserEntity).findOneBy({ id: userId });
         if (!user) throw new InvalidTokenException()
 
-        // TODO: check if payload.loggedAt match with user.loggedAt
-
-        if (user.status == ClientUserStatus.inactive) {
-            throw new UnauthorizedException({
-                error_code: ExceptionErrorType.InactiveUser,
-                message: 'User not authorized',
-            })
-        }
-        if (user.status == ClientUserStatus.blocked) {
-            throw new UnauthorizedException({
-                error_code: ExceptionErrorType.BlockedUser,
-                message: 'User not authorized',
-            })
-        }
+        // TODO: use DI
+        const clientUserService = new ClientUsersService(tenantConnection)
+        clientUserService.checkUserStatus(user)
 
         const clientUserMapper = new ClientUserMapper()
         return clientUserMapper.toDtoWithRelations(user)
