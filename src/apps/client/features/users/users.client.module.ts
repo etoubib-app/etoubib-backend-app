@@ -1,13 +1,16 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { ClientAuthModule } from '../auth/auth.client.module';
 import { ClientUserController } from './users.client.controller';
 import { ClientUsersApiService, ClientUsersService } from './services';
 import { ClientDatabaseModule } from '@lib/shared/modules';
 
 @Module({
-  imports: [ClientDatabaseModule, ClientAuthModule],
+  imports: [
+    ClientDatabaseModule,
+    forwardRef(() => ClientAuthModule)
+  ],
   controllers: [ClientUserController],
   providers: [ClientUsersApiService, ClientUsersService],
-  exports: []
+  exports: [ClientUsersService]
 })
 export class ClientUserModule { }

@@ -6,9 +6,9 @@ import { DataSource, Repository } from 'typeorm';
 
 @Injectable({ scope: Scope.REQUEST })
 export class ClientUsersService {
-    protected readonly clientUsersRepository: Repository<ClientUserEntity>;
+    private readonly clientUsersRepository: Repository<ClientUserEntity>;
 
-    constructor(protected readonly connection: DataSource) {
+    constructor(private readonly connection: DataSource) {
         this.clientUsersRepository = connection.getRepository(ClientUserEntity);
     }
 
