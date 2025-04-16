@@ -43,8 +43,6 @@ export class ClientUserEntity extends BaseEntity {
   })
   isOwner: boolean;
 
-  // TODO: add user role fk
-
   constructor(data: Partial<ClientUserEntity> = {}) {
     super();
     Object.assign(this, data);

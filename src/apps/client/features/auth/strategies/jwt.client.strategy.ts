@@ -25,8 +25,8 @@ export class ClientJwtStrategy extends PassportStrategy(Strategy) {
         if (!user) throw new InvalidTokenException()
 
         // TODO: use DI
-        const clientUserService = new ClientUsersService(tenantConnection)
-        clientUserService.checkUserStatus(user)
+        const clientUsersService = new ClientUsersService(tenantConnection)
+        clientUsersService.checkUserStatus(user)
 
         const clientUserMapper = new ClientUserMapper()
         return clientUserMapper.toDtoWithRelations(user)
