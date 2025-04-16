@@ -8,15 +8,14 @@ import { DBErrorCode } from '@lib/shared/types';
 import { ClientCreateUserDto } from '../dtos';
 import { ClientUsersService } from './users.client.service';
 
-// todo : remove ClientUserMapper
-
+// TODO : use ClientUserMapper in ClientUserEntity
 @Injectable({ scope: Scope.REQUEST })
 export class ClientUsersApiService {
-  protected readonly clientUsersRepository: Repository<ClientUserEntity>;
+  private readonly clientUsersRepository: Repository<ClientUserEntity>;
 
   constructor(
     @Inject(CLIENT_CONNECTION) connection: DataSource,
-    protected readonly clientUsersService: ClientUsersService
+    private readonly clientUsersService: ClientUsersService
   ) {
     this.clientUsersRepository = connection.getRepository(ClientUserEntity);
   }

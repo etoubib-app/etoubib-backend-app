@@ -8,17 +8,18 @@ import { ConfigService } from "@nestjs/config";
 import { REQUEST } from "@nestjs/core";
 import { ExceptionErrorType } from "@lib/shared/types";
 import { ClientUsersService } from "../../users/services";
-import { CLIENT_CONNECTION, getTenantConnection, JWTAuthHelper } from "@lib/shared/modules";
+import { CLIENT_CONNECTION, JWTAuthHelper } from "@lib/shared/modules";
 
 @Injectable({ scope: Scope.REQUEST })
 export class ClientAuthService {
-    protected readonly clientUserRepository: Repository<ClientUserEntity>;
+    private readonly clientUserRepository: Repository<ClientUserEntity>;
 
     constructor(
-        @Inject(REQUEST) protected request: Request,
-        protected readonly configService: ConfigService,
+        @Inject(REQUEST) private request: Request,
+        private readonly configService: ConfigService,
+        private clientUsersService: ClientUsersService,
         @Inject(CLIENT_CONNECTION) connection: DataSource,
-        protected readonly jwtAuthHelper: JWTAuthHelper<TClientJwtPayload>
+        private readonly jwtAuthHelper: JWTAuthHelper<TClientJwtPayload>
     ) {
         this.clientUserRepository = connection.getRepository(ClientUserEntity);
     }
@@ -37,9 +38,8 @@ export class ClientAuthService {
         const passwordMatched = await user.checkPassword(password);
         if (!passwordMatched) throw new InvalidCredentialsException();
 
-        const tenantConnection = await getTenantConnection(tenantId);
-        const clientUserService = new ClientUsersService(tenantConnection)
-        clientUserService.checkUserStatus(user)
+        // check user status 
+        this.clientUsersService.checkUserStatus(user)
 
         // generate token
         const secret = this.configService.getOrThrow<string>('jwt.client.secret')
