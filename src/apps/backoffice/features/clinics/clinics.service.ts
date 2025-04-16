@@ -1,4 +1,4 @@
-import { Clinic } from '@lib/shared';
+import { BoClinic } from '@lib/shared';
 import {
   ConflictException,
   forwardRef,
@@ -16,17 +16,17 @@ import { ClinicEvent } from './events/clinic.event';
 export class ClinicsService {
   constructor(
     @Inject('ClinicRepositoryToken')
-    private readonly ClinicsRepository: Repository<Clinic>,
+    private readonly ClinicsRepository: Repository<BoClinic>,
     @Inject(forwardRef(() => ClinicEvent))
     private readonly clinicEvent: ClinicEvent,
-  ) {}
+  ) { }
 
   async create(createClinicDto: CreateClinicDto) {
     const { name, email } = createClinicDto;
-    let clinic: Clinic = {} as Clinic;
+    let clinic: BoClinic = {} as BoClinic;
     try {
       await this.ClinicsRepository.manager.transaction(async (manager) => {
-        const existingClinic = await manager.findOne(Clinic, {
+        const existingClinic = await manager.findOne(BoClinic, {
           where: { name },
         });
         if (existingClinic) {
@@ -35,7 +35,7 @@ export class ClinicsService {
           );
         }
         // Create a new clinic entity.
-        clinic = manager.create(Clinic, {
+        clinic = manager.create(BoClinic, {
           name,
           email,
         });

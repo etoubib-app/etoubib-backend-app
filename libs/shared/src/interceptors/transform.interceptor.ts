@@ -1,6 +1,7 @@
 import {
   CallHandler,
   ExecutionContext,
+  HttpStatus,
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
@@ -8,6 +9,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { map } from 'rxjs/internal/operators/map';
 
 export enum Message {
+  DEFAULT = 'Success !',
   CREATED = 'Created successfully !',
   UPDATED = 'Updated successfully !',
   DELETED = 'Deleted successfully !',
@@ -25,8 +27,7 @@ export interface Response<T> {
 
 @Injectable()
 export class TransformInterceptor<T>
-  implements NestInterceptor<T, Response<T>>
-{
+  implements NestInterceptor<T, Response<T>> {
   private message: string;
 
   intercept(
@@ -43,7 +44,7 @@ export class TransformInterceptor<T>
         this.message = Message.FOUND;
         break;
       case 'POST':
-        this.message = Message.CREATED;
+        this.message = statusCode === HttpStatus.CREATED ? Message.CREATED : Message.DEFAULT;
         break;
       case 'PUT':
         this.message = Message.UPDATED;
@@ -55,12 +56,12 @@ export class TransformInterceptor<T>
         this.message = Message.DELETED;
         break;
       default:
-        this.message = 'Success';
+        this.message = Message.DEFAULT;
     }
 
     return next.handle().pipe(
       map((data: T) => ({
-        statusCode,
+        status: statusCode,
         message: this.message,
         data,
       })),

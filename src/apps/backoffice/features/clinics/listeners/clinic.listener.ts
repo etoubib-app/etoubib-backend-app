@@ -1,22 +1,19 @@
-import {
-  ActivationStatus,
-  Clinic,
-  generate_clinic_tenant_id,
-  SchemaMigrationStatus,
-} from '@lib/shared';
-import { getTenantConnectionClient } from '@lib/shared/utils/database/connection-client';
+import { BoClinic } from '@lib/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { Repository } from 'typeorm';
 
 import { ClinicEvents } from '../events/clinic-events';
+import { generateClinicTenantId } from '@lib/shared/helpers/common.helper';
+import { getTenantConnection } from '@lib/shared/modules/database/connection.client';
+import { ActivationStatus, SchemaMigrationStatus } from '@lib/shared/enums/backoffice';
 
 @Injectable()
 export class ClinicListener {
   constructor(
     @Inject('ClinicRepositoryToken')
-    private readonly clinicRepo: Repository<Clinic>,
-  ) {}
+    private readonly clinicRepo: Repository<BoClinic>,
+  ) { }
 
   @OnEvent(ClinicEvents.ClinicCreationUpdated)
   async handleClinicCreationUpdated(payload: {
@@ -27,12 +24,12 @@ export class ClinicListener {
       const clinic = await this.clinicRepo.findOneBy({ id: payload.clinicId });
       if (!clinic) throw new Error('Clinic not found');
       if (!clinic.tenantId) {
-        generate_clinic_tenant_id(clinic);
+        generateClinicTenantId(clinic);
       }
       const schemaName = clinic.tenantId;
       console.log(`Migration started for Clinic ${payload.clinicId}`);
       // initialize tenant connection
-      const dataSource = await getTenantConnectionClient(schemaName);
+      const dataSource = await getTenantConnection(schemaName);
 
       // run db migration scripts here
       await dataSource.runMigrations({ transaction: 'all' });
@@ -62,7 +59,7 @@ export class ClinicListener {
       const clinic = await this.clinicRepo.findOneBy({ id: payload.clinicId });
       if (!clinic) return;
       if (!clinic.tenantId) {
-        generate_clinic_tenant_id(clinic);
+        generateClinicTenantId(clinic);
       }
       clinic.migrationStatus = SchemaMigrationStatus.Running;
       await this.clinicRepo.save(clinic);
@@ -79,7 +76,7 @@ export class ClinicListener {
       const clinic = await this.clinicRepo.findOneBy({ id: payload.clinicId });
       if (!clinic) return;
       if (!clinic.tenantId) {
-        generate_clinic_tenant_id(clinic);
+        generateClinicTenantId(clinic);
       }
       clinic.activationStatus = ActivationStatus.Running;
       clinic.migrationStatus = SchemaMigrationStatus.Completed;
@@ -97,7 +94,7 @@ export class ClinicListener {
       const clinic = await this.clinicRepo.findOneBy({ id: payload.clinicId });
       if (!clinic) return;
       if (!clinic.tenantId) {
-        generate_clinic_tenant_id(clinic);
+        generateClinicTenantId(clinic);
       }
       clinic.activationStatus = ActivationStatus.Stopped;
       clinic.migrationStatus = SchemaMigrationStatus.Failed;

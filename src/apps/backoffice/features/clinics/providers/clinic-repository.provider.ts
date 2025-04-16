@@ -1,10 +1,11 @@
-import { Clinic } from '@lib/shared';
+import { BoClinic } from '@lib/shared';
+import { BACKOFFICE_CONNECTION } from '@lib/shared/modules/database/database.constant';
 import { DataSource, Repository } from 'typeorm';
 
 export const ClinicRepositoryProvider = {
   provide: 'ClinicRepositoryToken',
-  useFactory: (dataSource: DataSource): Repository<Clinic> => {
-    return dataSource.getRepository(Clinic);
+  useFactory: (dataSource: DataSource): Repository<BoClinic> => {
+    return dataSource.getRepository(BoClinic);
   },
-  inject: ['BACKOFFICE_DATA_SOURCE'], // Token for your backoffice DataSource
+  inject: [BACKOFFICE_CONNECTION],
 };

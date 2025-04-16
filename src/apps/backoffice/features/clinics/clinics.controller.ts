@@ -1,4 +1,4 @@
-import { BackofficeController, Clinic } from '@lib/shared';
+import { BackofficeController, BoClinic } from '@lib/shared';
 import {
   Body,
   Delete,
@@ -18,7 +18,7 @@ import { UpdateClinicDto } from './dto/update-clinic.dto';
 @Injectable({ scope: Scope.DEFAULT })
 @BackofficeController('clinics')
 export class ClinicsController {
-  constructor(private readonly clinicsService: ClinicsService) {}
+  constructor(private readonly clinicsService: ClinicsService) { }
 
   @Post()
   @ApiOperation({ summary: 'Create a clinic and run its migration' })
@@ -26,7 +26,7 @@ export class ClinicsController {
     status: 201,
     description:
       'The clinic has been created and migration executed successfully.',
-    type: Clinic,
+    type: BoClinic,
   })
   create(@Body() createClinicDto: CreateClinicDto) {
     return this.clinicsService.create(createClinicDto);
