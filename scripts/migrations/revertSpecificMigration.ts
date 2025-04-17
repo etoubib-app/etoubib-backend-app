@@ -3,15 +3,15 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import { getSourceSchema } from './migration.helpers';
 
 if (process.argv.length < 3) {
-  console.log('we need argument (schema name)');
+  console.log('We need the schema name as an argument');
   process.exit(1);
 }
 
 const schema_name = process.argv[2];
 
-runSpecificMigration()
+revertMigration()
   .then(() => {
-    console.log(`--- (${schema_name}) migration executed successfully ---`);
+    console.log(`--- (${schema_name}) migration reverted successfully ---`);
     process.exit(0);
   })
   .catch((error) => {
@@ -19,23 +19,21 @@ runSpecificMigration()
     process.exit(1);
   });
 
-async function runSpecificMigration() {
+async function revertMigration() {
   const isBackoffice = schema_name === 'backoffice';
   const dataSource = new DataSource({
     ...getSourceSchema(isBackoffice ? 'backoffice' : 'client'),
     schema: schema_name,
   } as DataSourceOptions);
-  await checkSchemaExists(schema_name, dataSource);
-  await runMigration(dataSource);
-}
 
-async function runMigration(dataSource: DataSource) {
+  await checkSchemaExists(schema_name, dataSource);
+
   try {
     await dataSource.initialize();
-    await dataSource.runMigrations();
+    await dataSource.undoLastMigration(); // Reverts the last migration
     await dataSource.destroy();
   } catch (error) {
-    console.error('Error running migrations:', error);
+    console.error('Error reverting migration:', error);
     process.exit(1);
   }
 }

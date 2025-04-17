@@ -2,6 +2,7 @@ export * from './config';
 export * from './decorators';
 export * from './entities/backoffice';
 export * from './entities/client';
+export * from './guards';
 export * from './interceptors';
 export * from './exceptions';
 export * from './filters';

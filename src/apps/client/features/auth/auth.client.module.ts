@@ -1,23 +1,23 @@
-
+import { ClientDatabaseModule, JWTAuthModule } from '@lib/shared/modules';
 import { forwardRef, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
+
+import { ClientUserModule } from '../users/users.client.module';
 import { ClientAuthController } from './auth.client.controller';
 import { ClientAuthService } from './services/auth.client.service';
 import { ClientJwtStrategy } from './strategies/jwt.client.strategy';
-import { ClientDatabaseModule, JWTAuthModule } from '@lib/shared/modules';
-import { ClientUserModule } from '../users/users.client.module';
 
 @Module({
-    imports: [
-        ConfigModule,
-        ClientDatabaseModule,
-        PassportModule.register({ defaultStrategy: "jwt" }),
-        JWTAuthModule,
-        forwardRef(() => ClientUserModule)
-    ],
-    controllers: [ClientAuthController],
-    providers: [ClientJwtStrategy, ClientAuthService],
-    exports: [ClientJwtStrategy, JWTAuthModule, ConfigModule]
+  imports: [
+    ConfigModule,
+    ClientDatabaseModule,
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+    JWTAuthModule,
+    forwardRef(() => ClientUserModule),
+  ],
+  controllers: [ClientAuthController],
+  providers: [ClientJwtStrategy, ClientAuthService],
+  exports: [ClientJwtStrategy, JWTAuthModule, ConfigModule],
 })
-export class ClientAuthModule { }
+export class ClientAuthModule {}

@@ -1,6 +1,7 @@
-import { DataSource, DataSourceOptions } from 'typeorm';
-import { getSourceSchema } from './migration.helpers';
 import { BoClinic } from '@lib/shared';
+import { DataSource, DataSourceOptions } from 'typeorm';
+
+import { getSourceSchema } from './migration.helpers';
 
 runAllMigrations()
   .then(() => {

@@ -63,7 +63,7 @@ generateMigrations()
     process.exit(1);
   });
 
-function queryParams(parameters: any[] | undefined): string {
+function queryParameters(parameters: any[] | undefined): string {
   if (!parameters || !parameters.length) {
     return '';
   }
@@ -76,21 +76,21 @@ async function generateMigrations() {
   const upSqls: string[] = [];
   const downSqls: string[] = [];
 
-  logs.upQueries.forEach((upQuery) => {
+  for (const upQuery of logs.upQueries) {
     upSqls.push(setSchemaInQuery(upQuery, schema_type));
-  });
-  logs.downQueries.forEach((downQuery) => {
+  }
+  for (const downQuery of logs.downQueries) {
     downSqls.push(setSchemaInQuery(downQuery, schema_type));
-  });
+  }
 
   return { upSqls, downSqls };
 }
 
 const setSchemaInQuery = (query: Query, schema: SchemaType) => {
   if (schema === 'client') {
-    return `await queryRunner.query(\`${query.query.replace(/`/g, '\\`').replace(new RegExp(schema_type, 'g'), '${schema}')}\`${queryParams(query.parameters)});`;
+    return `await queryRunner.query(\`${query.query.replace(/`/g, '\\`').replace(new RegExp(schema_type, 'g'), '${schema}')}\`${queryParameters(query.parameters)});`;
   }
-  return `await queryRunner.query(\`${query.query}\`${queryParams(query.parameters)});`;
+  return `await queryRunner.query(\`${query.query}\`${queryParameters(query.parameters)});`;
 };
 
 function getTemplate(
