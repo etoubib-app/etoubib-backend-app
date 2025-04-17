@@ -27,7 +27,8 @@ export interface Response<T> {
 
 @Injectable()
 export class TransformInterceptor<T>
-  implements NestInterceptor<T, Response<T>> {
+  implements NestInterceptor<T, Response<T>>
+{
   private message: string;
 
   intercept(
@@ -44,7 +45,8 @@ export class TransformInterceptor<T>
         this.message = Message.FOUND;
         break;
       case 'POST':
-        this.message = statusCode === HttpStatus.CREATED ? Message.CREATED : Message.DEFAULT;
+        this.message =
+          statusCode === HttpStatus.CREATED ? Message.CREATED : Message.DEFAULT;
         break;
       case 'PUT':
         this.message = Message.UPDATED;

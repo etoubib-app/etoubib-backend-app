@@ -5,10 +5,10 @@ export const appConfig = registerAs('app', () => ({
 }));
 
 type TJwtConfig = {
-  bo: Record<"secret" | "expires_in", string>,
-  client: Record<"secret" | "expires_in" | "remember_expires_in", string>
-}
-export const jwtConfig = registerAs<TJwtConfig>("jwt", () => ({
+  bo: Record<'secret' | 'expires_in', string>;
+  client: Record<'secret' | 'expires_in' | 'remember_expires_in', string>;
+};
+export const jwtConfig = registerAs<TJwtConfig>('jwt', () => ({
   client: {
     secret: process.env.JWT_AUTH_SECRET!,
     expires_in: process.env.ACCESS_TOKEN_EXPIRES_IN!,
@@ -17,5 +17,5 @@ export const jwtConfig = registerAs<TJwtConfig>("jwt", () => ({
   bo: {
     secret: process.env.BO_JWT_AUTH_SECRET!,
     expires_in: process.env.BO_ACCESS_TOKEN_EXPIRES_IN!,
-  }
-}))
+  },
+}));

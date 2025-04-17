@@ -12,13 +12,13 @@ import { ApiResponseWithData } from '@lib/shared/decorators';
 @Injectable({ scope: Scope.REQUEST })
 @ClientController('users')
 export class ClientUserController {
-  constructor(private readonly clientUsersApiService: ClientUsersApiService) { }
+  constructor(private readonly clientUsersApiService: ClientUsersApiService) {}
 
   @ApiOperation({ description: 'Clinic users list' })
   @ApiResponseWithData(ClientUserResponseDto, { isArray: true })
   @Get()
   public getUsers() {
-    return this.clientUsersApiService.getUsers("toDto");
+    return this.clientUsersApiService.getUsers('toDto');
   }
 
   @ApiOperation({ description: 'Create new clinic user' })
@@ -26,6 +26,6 @@ export class ClientUserController {
   @ApiConflictResponse({ description: 'User already exists' })
   @Post()
   public createUser(@Body() UserDto: ClientCreateUserDto) {
-    return this.clientUsersApiService.createUser(UserDto, "toDto");
+    return this.clientUsersApiService.createUser(UserDto, 'toDto');
   }
 }

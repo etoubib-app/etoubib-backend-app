@@ -4,7 +4,7 @@ import { getBoSourceOptions } from '@lib/shared/config';
 import { Module } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 
-const BO_SCHEMA = "backoffice"
+const BO_SCHEMA = 'backoffice';
 
 const boConnectionFactory = {
   provide: BACKOFFICE_CONNECTION,
@@ -24,4 +24,4 @@ const boConnectionFactory = {
   providers: [boConnectionFactory],
   exports: [BACKOFFICE_CONNECTION],
 })
-export class BoDatabaseModule { }
+export class BoDatabaseModule {}

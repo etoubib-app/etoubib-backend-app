@@ -11,14 +11,20 @@ import { JWTAuthModule } from '../jwt-auth/jwt-auth.module';
 const clientConnectionFactory = {
   scope: Scope.REQUEST,
   provide: CLIENT_CONNECTION,
-  useFactory: async (request: Request, jwtAuthHelper: JWTAuthHelper<TClientJwtPayload>, config: ConfigService,) => {
+  useFactory: async (
+    request: Request,
+    jwtAuthHelper: JWTAuthHelper<TClientJwtPayload>,
+    config: ConfigService,
+  ) => {
     const schemaName = request.headers['x-tenant-id'] as string | undefined;
-    const authorization = request.headers['authorization'] as string | undefined
+    const authorization = request.headers['authorization'] as
+      | string
+      | undefined;
 
     if (authorization) {
-      const token = authorization.split(" ")?.[1]
+      const token = authorization.split(' ')?.[1];
       const secret = config.getOrThrow<string>('jwt.client.secret');
-      const payload = jwtAuthHelper.verifyToken({ token, secret: secret! })
+      const payload = jwtAuthHelper.verifyToken({ token, secret: secret! });
       return await getTenantConnection(payload.tenantId);
     } else if (schemaName) {
       return await getTenantConnection(schemaName);
@@ -34,4 +40,4 @@ const clientConnectionFactory = {
   providers: [clientConnectionFactory],
   exports: [CLIENT_CONNECTION],
 })
-export class ClientDatabaseModule { }
+export class ClientDatabaseModule {}

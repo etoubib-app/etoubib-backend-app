@@ -18,7 +18,7 @@ import { UpdateClinicDto } from './dto/update-clinic.dto';
 @Injectable({ scope: Scope.DEFAULT })
 @BackofficeController('clinics')
 export class ClinicsController {
-  constructor(private readonly clinicsService: ClinicsService) { }
+  constructor(private readonly clinicsService: ClinicsService) {}
 
   @Post()
   @ApiOperation({ summary: 'Create a clinic and run its migration' })

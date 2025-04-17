@@ -5,12 +5,9 @@ import { ClientUsersApiService, ClientUsersService } from './services';
 import { ClientDatabaseModule } from '@lib/shared/modules';
 
 @Module({
-  imports: [
-    ClientDatabaseModule,
-    forwardRef(() => ClientAuthModule)
-  ],
+  imports: [ClientDatabaseModule, forwardRef(() => ClientAuthModule)],
   controllers: [ClientUserController],
   providers: [ClientUsersApiService, ClientUsersService],
-  exports: [ClientUsersService]
+  exports: [ClientUsersService],
 })
-export class ClientUserModule { }
+export class ClientUserModule {}

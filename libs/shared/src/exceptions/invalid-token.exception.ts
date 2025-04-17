@@ -5,7 +5,7 @@ export class InvalidTokenException extends UnauthorizedException {
   constructor() {
     super({
       error_code: ExceptionErrorType.InvalidToken,
-      message: "Invalid or expired access token"
+      message: 'Invalid or expired access token',
     });
   }
 }

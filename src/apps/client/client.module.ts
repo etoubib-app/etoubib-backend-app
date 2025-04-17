@@ -6,4 +6,4 @@ import { ClientAuthModule } from './features/auth/auth.client.module';
 @Module({
   imports: [ClientUserModule, ClientAuthModule],
 })
-export class ClientModule { }
+export class ClientModule {}

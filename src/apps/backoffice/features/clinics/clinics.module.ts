@@ -18,4 +18,4 @@ import { BoDatabaseModule } from '@lib/shared/modules';
   controllers: [ClinicsController],
   exports: [ClinicRepositoryProvider],
 })
-export class ClinicsModule { }
+export class ClinicsModule {}

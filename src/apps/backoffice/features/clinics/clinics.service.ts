@@ -19,7 +19,7 @@ export class ClinicsService {
     private readonly ClinicsRepository: Repository<BoClinic>,
     @Inject(forwardRef(() => ClinicEvent))
     private readonly clinicEvent: ClinicEvent,
-  ) { }
+  ) {}
 
   async create(createClinicDto: CreateClinicDto) {
     const { name, email } = createClinicDto;
