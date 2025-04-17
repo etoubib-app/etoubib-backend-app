@@ -6,14 +6,17 @@ import { Repository } from 'typeorm';
 import { ClinicEvents } from '../events/clinic-events';
 import { generateClinicTenantId } from '@lib/shared/helpers/common.helper';
 import { getTenantConnection } from '@lib/shared/modules/database/connection.client';
-import { ActivationStatus, SchemaMigrationStatus } from '@lib/shared/enums/backoffice';
+import {
+  ActivationStatus,
+  SchemaMigrationStatus,
+} from '@lib/shared/enums/backoffice';
 
 @Injectable()
 export class ClinicListener {
   constructor(
     @Inject('ClinicRepositoryToken')
     private readonly clinicRepo: Repository<BoClinic>,
-  ) { }
+  ) {}
 
   @OnEvent(ClinicEvents.ClinicCreationUpdated)
   async handleClinicCreationUpdated(payload: {

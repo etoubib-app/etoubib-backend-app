@@ -1,8 +1,10 @@
-import { type ClientUserWithRelationsResponseDto } from "../users/dtos";
+import { type ClientUserWithRelationsResponseDto } from '../users/dtos';
 
 export type TClientJwtPayload = {
-    userId: string;
-    tenantId: string;
-}
+  userId: string;
+  tenantId: string;
+};
 
-export type TClientAuthUser = InstanceType<typeof ClientUserWithRelationsResponseDto> 
+export type TClientAuthUser = InstanceType<
+  typeof ClientUserWithRelationsResponseDto
+>;

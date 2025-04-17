@@ -4,8 +4,8 @@ import { InvalidCredentialsException } from './invalid-credentials.exception';
 import { ForeignKeyConflictException } from './foreign-key-conflict.exception';
 
 export {
-    UserExistsException,
-    InvalidTokenException,
-    InvalidCredentialsException,
-    ForeignKeyConflictException,
+  UserExistsException,
+  InvalidTokenException,
+  InvalidCredentialsException,
+  ForeignKeyConflictException,
 };

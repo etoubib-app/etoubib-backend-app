@@ -1,4 +1,4 @@
-import { BoClinic } from "../entities/backoffice";
+import { BoClinic } from '../entities/backoffice';
 
 function generateId(name: string, date: Date): string {
   const sanitizedName = name.toLowerCase().replace(/\s+/g, '');

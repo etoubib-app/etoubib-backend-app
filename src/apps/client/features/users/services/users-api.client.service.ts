@@ -1,6 +1,18 @@
-import { ClientUserEntity, ForeignKeyConflictException, UserExistsException } from '@lib/shared';
-import { Inject, Injectable, InternalServerErrorException, Scope } from '@nestjs/common';
-import { ClientUserMapper, TClientUserMapperResponse } from '../users.client.mapper';
+import {
+  ClientUserEntity,
+  ForeignKeyConflictException,
+  UserExistsException,
+} from '@lib/shared';
+import {
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+  Scope,
+} from '@nestjs/common';
+import {
+  ClientUserMapper,
+  TClientUserMapperResponse,
+} from '../users.client.mapper';
 import { CLIENT_CONNECTION } from '@lib/shared/modules';
 import { TBaseMapperFormat } from '@lib/shared/base';
 import { DataSource, Repository } from 'typeorm';
@@ -15,26 +27,36 @@ export class ClientUsersApiService {
 
   constructor(
     @Inject(CLIENT_CONNECTION) connection: DataSource,
-    private readonly clientUsersService: ClientUsersService
+    private readonly clientUsersService: ClientUsersService,
   ) {
     this.clientUsersRepository = connection.getRepository(ClientUserEntity);
   }
 
-  async getUsers(format: TBaseMapperFormat = "toDto"): Promise<TClientUserMapperResponse[]> {
+  async getUsers(
+    format: TBaseMapperFormat = 'toDto',
+  ): Promise<TClientUserMapperResponse[]> {
     const clientUserMapper = new ClientUserMapper();
     const userEntities = await this.clientUsersRepository.find();
-    return userEntities.map((entity) => clientUserMapper.transform(entity, format));
+    return userEntities.map((entity) =>
+      clientUserMapper.transform(entity, format),
+    );
   }
 
-  async getUserById(id: string, format: TBaseMapperFormat = "toDtoWithRelations"): Promise<TClientUserMapperResponse> {
+  async getUserById(
+    id: string,
+    format: TBaseMapperFormat = 'toDtoWithRelations',
+  ): Promise<TClientUserMapperResponse> {
     const userEntity = await this.clientUsersRepository.findOneByOrFail({ id });
-    this.clientUsersService.checkUserStatus(userEntity) // check user status
+    this.clientUsersService.checkUserStatus(userEntity); // check user status
 
     const clientUserMapper = new ClientUserMapper();
     return clientUserMapper.transform(userEntity, format);
   }
 
-  async createUser(userDto: ClientCreateUserDto, format: TBaseMapperFormat = "toDto"): Promise<TClientUserMapperResponse> {
+  async createUser(
+    userDto: ClientCreateUserDto,
+    format: TBaseMapperFormat = 'toDto',
+  ): Promise<TClientUserMapperResponse> {
     const clientUserMapper = new ClientUserMapper();
 
     try {

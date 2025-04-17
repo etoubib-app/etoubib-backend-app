@@ -1,8 +1,8 @@
-import { type BoUserResponseDto } from "../users/dtos";
+import { type BoUserResponseDto } from '../users/dtos';
 
 export type TBoJwtPayload = {
-    userId: string;
-    loggedtAt: string;
-}
+  userId: string;
+  loggedtAt: string;
+};
 
-export type TBoAuthUser = InstanceType<typeof BoUserResponseDto> 
+export type TBoAuthUser = InstanceType<typeof BoUserResponseDto>;

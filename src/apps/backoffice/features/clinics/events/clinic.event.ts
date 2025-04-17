@@ -4,7 +4,7 @@ import { ClinicEvents } from './clinic-events';
 
 @Injectable()
 export class ClinicEvent {
-  constructor(private readonly eventEmitter: EventEmitter2) { }
+  constructor(private readonly eventEmitter: EventEmitter2) {}
 
   emitClinicCreationUpdate(clinicId: string): void {
     this.eventEmitter.emit(ClinicEvents.ClinicCreationUpdated, {

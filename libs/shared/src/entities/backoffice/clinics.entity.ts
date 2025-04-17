@@ -9,11 +9,11 @@ import {
   ActivationStatus,
   TActivationStatus,
   TSchemaMigrationStatus,
-  SchemaMigrationStatus
+  SchemaMigrationStatus,
 } from '@lib/shared/enums/backoffice';
 
 // TODO: extends BaseEntity and use snake_case for db columns
-@Entity({ schema: 'backoffice', name: "clinics" })
+@Entity({ schema: 'backoffice', name: 'clinics' })
 export class BoClinic {
   @PrimaryGeneratedColumn('uuid')
   id: string;

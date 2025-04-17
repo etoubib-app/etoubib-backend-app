@@ -34,7 +34,7 @@ export async function getTenantConnection(
   //   }
   // }
 
-  const safeSchema = sanitizeDbSchema(schema_name)
+  const safeSchema = sanitizeDbSchema(schema_name);
   try {
     // Create a new DataSource instance
     const newDataSource = new DataSource({
@@ -57,7 +57,7 @@ export async function getTenantConnection(
     if (result[0].schema !== safeSchema) {
       throw new NotFoundException({
         error_code: ExceptionErrorType.TenantNotFound,
-        message: `Tenant ID not found`
+        message: `Tenant ID not found`,
       });
     }
 
@@ -68,14 +68,16 @@ export async function getTenantConnection(
     console.error(error);
     throw new NotFoundException({
       error_code: ExceptionErrorType.TenantNotFound,
-      message: `Tenant ID not found`
+      message: `Tenant ID not found`,
     });
   }
 }
 
-export async function getTenantEntityManager(schema: string): Promise<EntityManager> {
+export async function getTenantEntityManager(
+  schema: string,
+): Promise<EntityManager> {
   const safeSchema = sanitizeDbSchema(schema);
-  const dataSource = await getTenantConnection(safeSchema)
+  const dataSource = await getTenantConnection(safeSchema);
   const queryRunner = dataSource.createQueryRunner();
   await queryRunner.connect();
   return queryRunner.manager;

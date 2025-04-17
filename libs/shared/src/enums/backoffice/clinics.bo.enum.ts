@@ -1,4 +1,4 @@
-import { ExtractEnumTypes } from "@lib/shared/helpers";
+import { ExtractEnumTypes } from '@lib/shared/helpers';
 
 // TODO: rename to BoClinicStatus
 export const ActivationStatus = {
@@ -7,7 +7,7 @@ export const ActivationStatus = {
   Stopped: 'stopped', // Deactivated
   Failed: 'failed', // Activation failed
 } as const;
-export type TActivationStatus = ExtractEnumTypes<typeof ActivationStatus>
+export type TActivationStatus = ExtractEnumTypes<typeof ActivationStatus>;
 
 // TODO: rename to BoClinicSetupStep
 export const SchemaMigrationStatus = {
@@ -16,5 +16,6 @@ export const SchemaMigrationStatus = {
   Completed: 'completed', // Migration successful
   Failed: 'failed', // Migration failed
 } as const;
-export type TSchemaMigrationStatus =
-  ExtractEnumTypes<typeof SchemaMigrationStatus>
+export type TSchemaMigrationStatus = ExtractEnumTypes<
+  typeof SchemaMigrationStatus
+>;
