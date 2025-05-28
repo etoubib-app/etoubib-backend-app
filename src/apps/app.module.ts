@@ -1,4 +1,4 @@
-import { appConfig, getDBSourceOptions } from '@lib/shared';
+import { appConfig, jwtConfig, getDBSourceOptions } from '@lib/shared';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -11,7 +11,7 @@ import { ClientModule } from './client/client.module';
   controllers: [AppController],
   imports: [
     ConfigModule.forRoot({
-      load: [appConfig],
+      load: [appConfig, jwtConfig],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],

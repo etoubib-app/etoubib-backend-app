@@ -1,22 +1,13 @@
-import { Module } from '@nestjs/common';
-
-import { CONNECTION } from '../../constants/app.constant';
-import { DatabaseModule } from '../../modules/database/database.module';
-import { ClientUsersController } from './users.client.controller';
-import { ClientUsersService } from './users.client.service';
+import { forwardRef, Module } from '@nestjs/common';
+import { ClientAuthModule } from '../auth/auth.client.module';
+import { ClientUserController } from './users.client.controller';
+import { ClientUsersApiService, ClientUsersService } from './services';
+import { ClientDatabaseModule } from '@lib/shared/modules';
 
 @Module({
-  imports: [DatabaseModule], // Import ClientModule here
-  controllers: [ClientUsersController],
-  providers: [
-    {
-      provide: 'ClientUsersServiceKey', // a symbol
-      useFactory: (ccs: ClientUsersService) => {
-        return Promise.resolve(ccs);
-      },
-      inject: [ClientUsersService, CONNECTION],
-    },
-    ClientUsersService,
-  ],
+  imports: [ClientDatabaseModule, forwardRef(() => ClientAuthModule)],
+  controllers: [ClientUserController],
+  providers: [ClientUsersApiService, ClientUsersService],
+  exports: [ClientUsersService],
 })
-export class ClientUsersModule {}
+export class ClientUserModule {}

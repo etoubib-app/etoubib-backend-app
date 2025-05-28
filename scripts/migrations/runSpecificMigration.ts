@@ -1,4 +1,5 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
+
 import { getSourceSchema } from './migration.helpers';
 
 if (process.argv.length < 3) {

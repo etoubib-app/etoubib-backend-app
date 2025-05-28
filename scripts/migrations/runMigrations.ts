@@ -1,6 +1,7 @@
+import { BoClinic } from '@lib/shared';
 import { DataSource, DataSourceOptions } from 'typeorm';
+
 import { getSourceSchema } from './migration.helpers';
-import { Clinic } from '@lib/shared';
 
 runAllMigrations()
   .then(() => {
@@ -20,7 +21,7 @@ async function runAllMigrations() {
   await runMigration(backofficeDataSource);
   console.log('--- (backoffice) migration executed successfully ---');
   await backofficeDataSource.initialize();
-  const clinicRepo = backofficeDataSource.getRepository(Clinic);
+  const clinicRepo = backofficeDataSource.getRepository(BoClinic);
   const allClinics = await clinicRepo.find();
   console.log('+++ All clinics:', allClinics);
   await backofficeDataSource.destroy();

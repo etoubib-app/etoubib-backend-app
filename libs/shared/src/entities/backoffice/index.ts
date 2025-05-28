@@ -1,4 +1,9 @@
-import { Clinic } from './clinic.entity';
-export * from './clinic.entity';
+import { BoClinic } from './clinics.entity';
+import { Role } from './role.entity';
+import { RoleAuthorization } from './role-authorization.entity';
 
-export const AllBackofficeEntities = [Clinic];
+export * from './clinics.entity';
+export * from './role.entity';
+export * from './role-authorization.entity';
+
+export const AllBackofficeEntities = [BoClinic, Role, RoleAuthorization];
