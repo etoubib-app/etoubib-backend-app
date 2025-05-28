@@ -1,15 +1,15 @@
 import { BoClinic } from '@lib/shared';
+import {
+  ActivationStatus,
+  SchemaMigrationStatus,
+} from '@lib/shared/enums/backoffice';
+import { generateClinicTenantId } from '@lib/shared/helpers/common.helper';
+import { getTenantConnection } from '@lib/shared/modules/database/connection.client';
 import { Inject, Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { Repository } from 'typeorm';
 
 import { ClinicEvents } from '../events/clinic-events';
-import { generateClinicTenantId } from '@lib/shared/helpers/common.helper';
-import { getTenantConnection } from '@lib/shared/modules/database/connection.client';
-import {
-  ActivationStatus,
-  SchemaMigrationStatus,
-} from '@lib/shared/enums/backoffice';
 
 @Injectable()
 export class ClinicListener {

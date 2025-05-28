@@ -1,7 +1,7 @@
 import {
   CreateDateColumn,
-  UpdateDateColumn,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 export abstract class BaseEntity {

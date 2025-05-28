@@ -18,11 +18,12 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { ClientAuthService } from './services/auth.client.service';
-import { ClientUserLoginDto } from './dtos/user-login.client.dto';
-import { ClientJwtAuthGuard } from './guards/jwt-auth.client.guard';
+
 import { ClientUserWithRelationsResponseDto } from '../users/dtos';
 import { ClientUserLoginResponseDto } from './dtos';
+import { ClientUserLoginDto } from './dtos/user-login.client.dto';
+import { ClientJwtAuthGuard } from './guards/jwt-auth.client.guard';
+import { ClientAuthService } from './services/auth.client.service';
 
 @ApiTags('Client Auth')
 @Injectable({ scope: Scope.REQUEST })

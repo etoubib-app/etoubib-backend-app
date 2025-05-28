@@ -1,12 +1,13 @@
-import * as bcrypt from 'bcryptjs';
-import { Entity, Column } from 'typeorm';
-import { Exclude } from 'class-transformer';
-import { BaseEntity } from '../../base';
-import { bycryptHashPassword } from '@lib/shared/helpers';
 import {
-  type TClientUserStatus,
   ClientUserStatus,
+  type TClientUserStatus,
 } from '@lib/shared/enums/client';
+import { bycryptHashPassword } from '@lib/shared/helpers';
+import * as bcrypt from 'bcryptjs';
+import { Exclude } from 'class-transformer';
+import { Column, Entity } from 'typeorm';
+
+import { BaseEntity } from '../../base';
 
 @Entity({ name: 'users' })
 export class ClientUserEntity extends BaseEntity {

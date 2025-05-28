@@ -1,16 +1,16 @@
 import {
+  ActivationStatus,
+  SchemaMigrationStatus,
+  TActivationStatus,
+  TSchemaMigrationStatus,
+} from '@lib/shared/enums/backoffice';
+import {
   Column,
   CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import {
-  ActivationStatus,
-  TActivationStatus,
-  TSchemaMigrationStatus,
-  SchemaMigrationStatus,
-} from '@lib/shared/enums/backoffice';
 
 // TODO: extends BaseEntity and use snake_case for db columns
 @Entity({ schema: 'backoffice', name: 'clinics' })

@@ -1,7 +1,8 @@
 import { BadRequestException } from '@nestjs/common';
+import * as format from 'pg-format';
+
 import { DB_SCHEMA_REGEX } from '../constants';
 import { ExceptionErrorType } from '../types';
-import * as format from 'pg-format';
 
 export function sanitizeDbSchema(schema: string): string {
   if (!DB_SCHEMA_REGEX.test(schema)) {

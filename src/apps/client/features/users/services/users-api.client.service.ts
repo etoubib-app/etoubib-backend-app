@@ -3,21 +3,22 @@ import {
   ForeignKeyConflictException,
   UserExistsException,
 } from '@lib/shared';
+import { TBaseMapperFormat } from '@lib/shared/base';
+import { CLIENT_CONNECTION } from '@lib/shared/modules';
+import { DBErrorCode } from '@lib/shared/types';
 import {
   Inject,
   Injectable,
   InternalServerErrorException,
   Scope,
 } from '@nestjs/common';
+import { DataSource, Repository } from 'typeorm';
+
+import { ClientCreateUserDto } from '../dtos';
 import {
   ClientUserMapper,
   TClientUserMapperResponse,
 } from '../users.client.mapper';
-import { CLIENT_CONNECTION } from '@lib/shared/modules';
-import { TBaseMapperFormat } from '@lib/shared/base';
-import { DataSource, Repository } from 'typeorm';
-import { DBErrorCode } from '@lib/shared/types';
-import { ClientCreateUserDto } from '../dtos';
 import { ClientUsersService } from './users.client.service';
 
 // TODO : use ClientUserMapper in ClientUserEntity

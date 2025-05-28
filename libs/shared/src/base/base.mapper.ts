@@ -1,5 +1,5 @@
-import { BaseResponseDto } from './base-response.dto';
 import { BaseEntity } from './base.entity';
+import { BaseResponseDto } from './base-response.dto';
 
 export type TBaseMapperFormat = 'entity' | 'toDto' | 'toDtoWithRelations';
 

@@ -1,7 +1,7 @@
-import { Injectable, Scope, UnauthorizedException } from '@nestjs/common';
 import { ClientUserEntity } from '@lib/shared';
-import { ExceptionErrorType } from '@lib/shared/types';
 import { ClientUserStatus } from '@lib/shared/enums/client';
+import { ExceptionErrorType } from '@lib/shared/types';
+import { Injectable, Scope, UnauthorizedException } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 
 @Injectable({ scope: Scope.REQUEST })

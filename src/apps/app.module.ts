@@ -1,4 +1,4 @@
-import { appConfig, jwtConfig, getDBSourceOptions } from '@lib/shared';
+import { appConfig, getDBSourceOptions, jwtConfig } from '@lib/shared';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';

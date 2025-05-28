@@ -1,19 +1,20 @@
 import { ClientUserEntity, InvalidCredentialsException } from '@lib/shared';
+import { CLIENT_CONNECTION, JWTAuthHelper } from '@lib/shared/modules';
+import { ExceptionErrorType } from '@lib/shared/types';
 import {
   Inject,
   Injectable,
   Scope,
   UnauthorizedException,
 } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
-import { ClientUserLoginDto, ClientUserLoginResponseDto } from '../dtos';
-import { TClientJwtPayload } from '../types';
-import { ClientUserMapper } from '../../users/users.client.mapper';
 import { ConfigService } from '@nestjs/config';
 import { REQUEST } from '@nestjs/core';
-import { ExceptionErrorType } from '@lib/shared/types';
+import { DataSource, Repository } from 'typeorm';
+
 import { ClientUsersService } from '../../users/services';
-import { CLIENT_CONNECTION, JWTAuthHelper } from '@lib/shared/modules';
+import { ClientUserMapper } from '../../users/users.client.mapper';
+import { ClientUserLoginDto, ClientUserLoginResponseDto } from '../dtos';
+import { TClientJwtPayload } from '../types';
 
 @Injectable({ scope: Scope.REQUEST })
 export class ClientAuthService {
@@ -58,8 +59,8 @@ export class ClientAuthService {
     const payload: TClientJwtPayload = { userId: user.id, tenantId };
     const token = this.jwtAuthHelper.generateAccessToken({
       payload,
-      secret: secret!,
-      expiresIn: expiresIn!,
+      secret: secret,
+      expiresIn: expiresIn,
     });
 
     const clientUserMapper = new ClientUserMapper();

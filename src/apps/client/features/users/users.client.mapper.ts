@@ -1,7 +1,8 @@
-import { ClientUserResponseDto, ClientCreateUserDto } from './dtos';
-import { ClientUserStatus } from '@lib/shared/enums/client';
 import { ClientUserEntity } from '@lib/shared';
 import { BaseMapper } from '@lib/shared/base';
+import { ClientUserStatus } from '@lib/shared/enums/client';
+
+import { ClientCreateUserDto, ClientUserResponseDto } from './dtos';
 import { ClientUserWithRelationsResponseDto } from './dtos/user-with-relations-response.client.dto';
 
 export type TClientUserMapperResponse = ReturnType<
@@ -43,7 +44,7 @@ export class ClientUserMapper extends BaseMapper<
   public toDtoWithRelations(
     entity: ClientUserEntity,
   ): ClientUserWithRelationsResponseDto {
-    let dto = this.fillBasicDtoFields(
+    const dto = this.fillBasicDtoFields(
       new ClientUserWithRelationsResponseDto(),
       entity,
     ) as ClientUserWithRelationsResponseDto;

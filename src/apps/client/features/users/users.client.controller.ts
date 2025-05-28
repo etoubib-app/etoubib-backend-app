@@ -1,11 +1,11 @@
 import { ClientController } from '@lib/shared';
-import { Body, Get, Injectable, Post, Scope, UseGuards } from '@nestjs/common';
-
-import { ClientUsersApiService } from './services';
-import { ApiConflictResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { ClientCreateUserDto, ClientUserResponseDto } from './dtos';
-import { ClientJwtAuthGuard } from '../auth/guards/jwt-auth.client.guard';
 import { ApiResponseWithData } from '@lib/shared/decorators';
+import { Body, Get, Injectable, Post, Scope, UseGuards } from '@nestjs/common';
+import { ApiConflictResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+
+import { ClientJwtAuthGuard } from '../auth/guards/jwt-auth.client.guard';
+import { ClientCreateUserDto, ClientUserResponseDto } from './dtos';
+import { ClientUsersApiService } from './services';
 
 @ApiTags('Client Users')
 @UseGuards(ClientJwtAuthGuard)

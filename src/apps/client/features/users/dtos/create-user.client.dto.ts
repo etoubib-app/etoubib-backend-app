@@ -1,3 +1,6 @@
+import { CLIENT_USER_PASSWORD_REGEX } from '@lib/shared';
+import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
   IsAlphanumeric,
   IsBoolean,
@@ -8,9 +11,6 @@ import {
   Matches,
   MaxLength,
 } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
-import { CLIENT_USER_PASSWORD_REGEX } from '@lib/shared';
-import { Transform } from 'class-transformer';
 
 export class ClientCreateUserDto {
   @IsNotEmpty()
