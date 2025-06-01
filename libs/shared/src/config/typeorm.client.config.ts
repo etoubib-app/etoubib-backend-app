@@ -13,21 +13,12 @@ export const getClientSourceOptions = (
   innerConfigService: ConfigService = configService,
 ): PostgresConnectionOptions => ({
   ...getDBSourceOptions(innerConfigService),
-  // entities: CLIENT_ENTITIES,
   entities: [
-    path.resolve(
-      __dirname,
-      '../entities/client/*.client.entity.{js,ts}', // works for dev and prod
-    ),
+    path.resolve(__dirname, '../entities/client/*.client.entity.{js,ts}'),
   ],
   migrations: [
-    path.resolve(
-      __dirname,
-      '../migrations/client/*-migration.{js,ts}', // works for dev and prod
-    ),
+    path.resolve(__dirname, '../migrations/client/*-migration.{js,ts}'),
   ],
-  uuidExtension: 'uuid-ossp',
-  // migrations: ['libs/shared/src/migrations/client/*-migration.ts'],
 });
 
 const CoDataSource = new DataSource(getClientSourceOptions());

@@ -25,6 +25,7 @@ export const getDBSourceOptions = (
     logging: true,
     synchronize: false,
     migrationsRun: false,
+    uuidExtension: 'uuid-ossp',
     ...ssl,
   };
 };
