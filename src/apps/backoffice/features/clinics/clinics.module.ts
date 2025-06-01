@@ -1,22 +1,22 @@
-import { BoDatabaseModule } from '@lib/shared/modules';
+import { BoDatabaseModule, RepositoriesModule } from '@lib/shared/modules';
 import { Module } from '@nestjs/common';
 import { EventEmitterModule } from '@nestjs/event-emitter/dist/event-emitter.module';
 
 import { ClinicsController } from './clinics.controller';
-import { ClinicsService } from './clinics.service';
-import { ClinicEvent } from './events/clinic.event';
 import { ClinicListener } from './listeners/clinic.listener';
-import { ClinicRepositoryProvider } from './providers/clinic-repository.provider';
+import { ClinicsService } from './services/clinics.service';
+import { ClinicsListenerService } from './services/clinics-listener.service';
+import { BoClinicSubscriber } from './subscribers/clinic.subscriber';
 
 @Module({
-  imports: [BoDatabaseModule, EventEmitterModule.forRoot()],
-  providers: [
-    ClinicsService,
-    ClinicEvent,
-    ClinicListener,
-    ClinicRepositoryProvider, // Register our custom provider here
-  ],
+  imports: [BoDatabaseModule, RepositoriesModule, EventEmitterModule.forRoot()],
   controllers: [ClinicsController],
-  exports: [ClinicRepositoryProvider],
+  providers: [
+    ClinicsListenerService,
+    ClinicsService,
+    ClinicListener,
+    BoClinicSubscriber,
+  ],
+  exports: [],
 })
 export class ClinicsModule {}

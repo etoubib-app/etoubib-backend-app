@@ -3,31 +3,31 @@ import {
   type TClientUserStatus,
 } from '@lib/shared/enums/client';
 import { bycryptHashPassword } from '@lib/shared/helpers';
+import { UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import { Exclude } from 'class-transformer';
 import { Column, Entity } from 'typeorm';
 
 import { BaseEntity } from '../../base';
 
-@Entity({ name: 'users' })
-export class ClientUserEntity extends BaseEntity {
+@Entity('users')
+export class ClientUser extends BaseEntity {
   @Column({
     type: 'varchar',
     name: 'first_name',
     length: 255,
   })
-  firstName: string;
+  firstName!: string;
 
   @Column({
     type: 'varchar',
     name: 'last_name',
     length: 255,
-    nullable: true,
   })
-  lastName?: string;
+  lastName!: string;
 
   @Column({ unique: true, type: 'varchar', length: 255 })
-  email: string;
+  email!: string;
 
   @Column({
     type: 'varchar',
@@ -35,19 +35,15 @@ export class ClientUserEntity extends BaseEntity {
     length: 255,
   })
   @Exclude()
-  private _password: string;
+  private _password!: string;
 
   @Column({ type: 'varchar', default: ClientUserStatus.active })
-  status: TClientUserStatus;
+  status!: TClientUserStatus;
 
-  @Column({
-    type: 'boolean',
-    name: 'is_owner',
-    default: false,
-  })
-  isOwner: boolean;
+  @Column({ type: 'boolean', default: false })
+  isOwner?: boolean;
 
-  constructor(data: Partial<ClientUserEntity> = {}) {
+  constructor(data: Partial<ClientUser> = {}) {
     super();
     Object.assign(this, data);
   }
@@ -55,10 +51,22 @@ export class ClientUserEntity extends BaseEntity {
   get password(): string {
     return this._password;
   }
+
   async setPassword(value: string): Promise<void> {
     this._password = await bycryptHashPassword(value);
   }
+
   async checkPassword(plainPassword: string): Promise<boolean> {
     return await bcrypt.compare(plainPassword, this._password);
+  }
+
+  checkUserStatus(): boolean {
+    if (this.status == ClientUserStatus.inactive) {
+      throw new UnauthorizedException('User inactive not authorized to login');
+    }
+    if (this.status == ClientUserStatus.blocked) {
+      throw new UnauthorizedException('User blocked not authorized to login');
+    }
+    return true;
   }
 }

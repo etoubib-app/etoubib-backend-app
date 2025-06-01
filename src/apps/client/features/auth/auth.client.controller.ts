@@ -4,13 +4,21 @@ import {
   GetAuthUser,
 } from '@lib/shared';
 import {
+  ClientUserLoginResponseDto,
+  ClientUserWithRelationsResponseDto,
+  UserLoginDto,
+  UserLoginResponseDto,
+} from '@lib/shared/dto';
+import { AuthService } from '@lib/shared/modules/auth/auth.service';
+import { getTenantId } from '@lib/shared/modules/auth/decorators/tenant.decorator';
+import { ClientJwtAuthGuard } from '@lib/shared/modules/jwt-auth';
+import {
   Body,
   Get,
   HttpCode,
   HttpStatus,
   Injectable,
   Post,
-  Scope,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -19,27 +27,22 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 
-import { ClientUserWithRelationsResponseDto } from '../users/dtos';
-import { ClientUserLoginResponseDto } from './dtos';
-import { ClientUserLoginDto } from './dtos/user-login.client.dto';
-import { ClientJwtAuthGuard } from './guards/jwt-auth.client.guard';
-import { ClientAuthService } from './services/auth.client.service';
-
 @ApiTags('Client Auth')
-@Injectable({ scope: Scope.REQUEST })
+@Injectable()
 @ClientController('auth')
 export class ClientAuthController {
-  constructor(private authService: ClientAuthService) {}
+  constructor(private authService: AuthService) {}
 
   @ApiOperation({ description: 'Clinic user authenticate' })
-  @ApiResponseWithData(ClientUserLoginResponseDto)
+  @ApiResponseWithData(UserLoginResponseDto)
   @ApiUnauthorizedResponse({ description: 'Invalid credentials' })
   @HttpCode(HttpStatus.OK)
   @Post('login')
   login(
-    @Body() userLoginDto: ClientUserLoginDto,
+    @Body() userLoginDto: UserLoginDto,
+    @getTenantId() tenantId: string,
   ): Promise<ClientUserLoginResponseDto> {
-    return this.authService.login(userLoginDto);
+    return this.authService.clientLogin(userLoginDto, tenantId);
   }
 
   @UseGuards(ClientJwtAuthGuard)

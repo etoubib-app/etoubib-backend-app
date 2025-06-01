@@ -1,9 +1,9 @@
 import { ConfigService } from '@nestjs/config';
 import { config } from 'dotenv';
+import * as path from 'path';
 import { DataSource } from 'typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
-import { AllClientEntities } from '../entities/client';
 import { getDBSourceOptions } from './typeorm.config';
 config();
 
@@ -13,8 +13,21 @@ export const getClientSourceOptions = (
   innerConfigService: ConfigService = configService,
 ): PostgresConnectionOptions => ({
   ...getDBSourceOptions(innerConfigService),
-  entities: AllClientEntities,
-  migrations: ['libs/shared/src/migrations/client/*-migration.ts'],
+  // entities: CLIENT_ENTITIES,
+  entities: [
+    path.resolve(
+      __dirname,
+      '../entities/client/*.client.entity.{js,ts}', // works for dev and prod
+    ),
+  ],
+  migrations: [
+    path.resolve(
+      __dirname,
+      '../migrations/client/*-migration.{js,ts}', // works for dev and prod
+    ),
+  ],
+  uuidExtension: 'uuid-ossp',
+  // migrations: ['libs/shared/src/migrations/client/*-migration.ts'],
 });
 
 const CoDataSource = new DataSource(getClientSourceOptions());

@@ -10,4 +10,5 @@ function generateId(name: string, date: Date): string {
 export function generateClinicTenantId(clinic: BoClinic): void {
   clinic.name = clinic.name.replace(/\s/g, '-').toLowerCase();
   clinic.tenantId = generateId(clinic.name, new Date(clinic.createdAt));
+  // clinic.tenantId = generateId(clinic.name, new Date('2023-01-01T00:00:00Z'));
 }
