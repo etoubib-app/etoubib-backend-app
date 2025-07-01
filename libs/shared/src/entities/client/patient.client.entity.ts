@@ -1,5 +1,6 @@
 import { BaseEntity } from '@lib/shared/base';
 import { Entity, Column, OneToMany, ManyToOne } from 'typeorm';
+import { FormAnswerEntity } from './form-answer.client.entity';
 import { AddressEntity } from './address.client.entity';
 
 @Entity({ name: 'patients' })
@@ -39,6 +40,9 @@ export class PatientEntity extends BaseEntity {
 
     @OneToMany(() => PatientEntity, patient => patient.guardian)
     members: PatientEntity[];
+
+    @OneToMany(() => FormAnswerEntity, answer => answer.patient)
+    answers: FormAnswerEntity[];
 
     get isMinor(): boolean {
         if (!this.birthDate) throw Error("birth date must be provided.")
