@@ -9,13 +9,12 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-// TODO: add swagger placeholders 
 export class UpdatePatientDto {
   @IsOptional()
   @IsString()
   @MaxLength(100)
   @IsAlphanumeric()
-  @ApiProperty({ example: 'John' })
+  @ApiProperty({ example: 'Jade' })
   firstName?: string;
 
   @IsOptional()
@@ -36,6 +35,7 @@ export class UpdatePatientDto {
 
   @IsOptional()
   @IsString()
+  @ApiProperty({ example: '00000' })
   cin?: string;
 
   @IsOptional()
@@ -61,6 +61,7 @@ export class UpdatePatientDto {
 
   @IsOptional()
   @IsUUID()
+  @ApiProperty({ example: '9542089b-6e3f-41dd-b389-f7e110366dd4' })
   address_id?: string;
 
   // @IsOptional()

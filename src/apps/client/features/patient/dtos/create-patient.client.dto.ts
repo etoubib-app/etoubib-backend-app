@@ -13,9 +13,8 @@ import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
 import { ExactlyOneAddressField } from '../validators';
-import { CreateAddressDto } from './create-address.client.dto';
+import { CreateAddressDto } from '../../../modules/address/dtos';
 
-// TODO: add swagger placeholders 
 @ExactlyOneAddressField({ message: 'Provide either address or address_id, not both' })
 export class CreatePatientDto {
   @IsString()
@@ -32,12 +31,15 @@ export class CreatePatientDto {
 
   @IsString()
   @MaxLength(20)
+  @ApiProperty({ example: '0000' })
   phoneNumber: string;
 
   @IsDateString()
+  @ApiProperty({ example: '2000-12-21' })
   birthDate: string;
 
   @IsString()
+  @ApiProperty({ example: 'CR12345' })
   cin: string;
 
   @IsOptional()
@@ -69,6 +71,14 @@ export class CreatePatientDto {
   @ValidateNested()
   @Type(() => CreateAddressDto)
   @IsOptional()
+  @ApiProperty({
+    type: () => CreateAddressDto, nullable: true, example: {
+      address: '123 Main Street',
+      postalCode: '20250',
+      city: 'Casablanca',
+      country: 'Morocco'
+    }
+  })
   address?: CreateAddressDto;
 
   @ValidateIf(o => !o.address)
