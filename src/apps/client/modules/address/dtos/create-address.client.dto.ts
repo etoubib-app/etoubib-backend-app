@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsAlphanumeric, IsOptional, IsString, MaxLength } from 'class-validator';
 
-// TODO: move to address module
 export class CreateAddressDto {
     @IsString()
     @MaxLength(200)
