@@ -22,3 +22,10 @@ export const ExceptionErrorType = {
   InvalidCredentials: 'INVALID_CREDENTIALS',
 } as const;
 export type TExceptionErrorType = ExtractEnumTypes<typeof ExceptionErrorType>;
+
+export type TPaginatedData<TData> = {
+  data: TData[];
+  page: number;
+  total: number;
+  limit: number;
+}
