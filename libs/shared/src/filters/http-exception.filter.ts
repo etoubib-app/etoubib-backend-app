@@ -5,7 +5,7 @@ import {
   ArgumentsHost,
   ExceptionFilter,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -19,22 +19,26 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     const errorMessage =
       exception.message || 'Something went wrong, retry later!';
+
     const exceptionResponse = exception.getResponse() as {
       error_code?: string;
       message?: string | unknown;
+      detail?: string;
     };
     const validatorsErrors =
       exceptionResponse?.message &&
-      typeof exceptionResponse.message !== 'string'
+        typeof exceptionResponse.message !== 'string'
         ? exceptionResponse.message
         : undefined;
     const errorCode = exceptionResponse?.error_code;
+    const errorTrace = exceptionResponse?.detail;
 
     response.status(statusCode).json({
-      status: statusCode,
-      error_code: errorCode,
-      message: errorMessage,
-      errors: validatorsErrors,
+      status: statusCode, // status code
+      error_code: errorCode, // error code
+      message: errorMessage, // custom error message
+      errors: validatorsErrors, // class validators errors 
+      trace: errorTrace, // error trace
       timestamp: new Date().toISOString(),
     });
   }
