@@ -4,8 +4,10 @@ import { QuestionEntity } from './question.client.entity';
 
 @Entity({ name: 'forms' })
 export class FormEntity extends BaseEntity {
-  @Column()
+  @Column({ type: 'varchar' })
   title: string;
+
+  // TODO: add status ( published, draft ) ?
 
   @OneToMany(() => QuestionEntity, question => question.form)
   questions: QuestionEntity[];

@@ -11,7 +11,7 @@ import { FormEntity } from './form.client.entity';
 
 @Entity({ name: 'questions' })
 export class QuestionEntity extends BaseEntity {
-  @Column()
+  @Column({ type: 'text' })
   question: string;
 
   @Column({ type: "int" })
