@@ -16,11 +16,8 @@ export class FormAnswerEntity extends BaseEntity {
   })
   question: QuestionEntity;
 
-  // @Column({ name: 'answer_text', type: 'text', nullable: true })
-  // answerText: string | null;
-
   @Column({ name: 'answer_json', type: 'json', nullable: true })
-  answerJson: string[] | null;
+  answer: boolean | string | string[] | null;
 
   constructor(data: Partial<FormAnswerEntity> = {}) {
     super();
