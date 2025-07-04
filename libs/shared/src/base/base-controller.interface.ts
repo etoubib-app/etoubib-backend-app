@@ -2,7 +2,7 @@ import { DeepPartial } from "typeorm";
 import { PaginationQueryDto } from "../dto";
 import { TPaginatedData } from "../types";
 
-export interface IBaseController<
+export interface IBaseCRUDController<
   Entity extends { id: string, deletedAt: Date },
   CreateDto extends DeepPartial<Entity>,
   UpdateDto extends DeepPartial<Entity>,
@@ -11,6 +11,6 @@ export interface IBaseController<
   findOne(id: string): Promise<Entity>;
   create(dto: CreateDto): Promise<Entity>;
   update(id: string, dto: UpdateDto): Promise<Entity>;
-  delete(id: string): Promise<void>;
+  delete?(id: string): Promise<void>;
   restore?(id: string): Promise<Entity>;
 }

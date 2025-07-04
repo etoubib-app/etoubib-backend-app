@@ -5,16 +5,15 @@ import { ApiConflictResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ClientJwtAuthGuard } from '../auth/guards/jwt-auth.client.guard';
 import { PatientEntity } from '@lib/shared/entities/client/patient.client.entity';
 import { PatientsApiService } from './services/patients-api.client.service';
-import { IBaseController } from '@lib/shared/base/base-controller.interface';
-import { CreatePatientDto, UpdatePatientDto } from './dtos';
+import { IBaseCRUDController } from '@lib/shared/base/base-controller.interface';
+import { CreatePatientDto, PatientResponseDto, UpdatePatientDto } from './dtos';
 import { PaginationQueryDto } from '@lib/shared/dto';
-import { PatientResponseDto } from './dtos/patient-response.client.dto';
 
 @ApiTags('Patients')
 @UseGuards(ClientJwtAuthGuard)
 @Injectable({ scope: Scope.REQUEST })
 @ClientController('patients')
-export class PatientsController implements IBaseController<PatientEntity, CreatePatientDto, UpdatePatientDto> {
+export class PatientsController implements IBaseCRUDController<PatientEntity, CreatePatientDto, UpdatePatientDto> {
   constructor(protected readonly patientsApiService: PatientsApiService) { }
 
   @Get()
