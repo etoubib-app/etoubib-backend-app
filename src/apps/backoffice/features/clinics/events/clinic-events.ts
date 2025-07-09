@@ -1,8 +1,7 @@
 export const ClinicEvents = {
-  ClinicCreationUpdated: 'clinic.creation.updated',
-  MigrationStarted: 'clinic.migration.started',
-  MigrationSuccess: 'clinic.migration.success',
-  MigrationFailed: 'clinic.migration.failed',
+  ClinicInitializationStarted: 'clinic.initialization.started',
+  ClinicSetupingStarted: 'clinic.setup.started',
+  ClinicSeedingStarted: 'clinic.seeding.started',
 } as const;
 
 export type ClinicEvents = (typeof ClinicEvents)[keyof typeof ClinicEvents];

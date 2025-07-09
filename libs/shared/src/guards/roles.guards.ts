@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ResourceAuthorizations } from 'etoubib-shared';
+import { Request } from 'express';
 
 const AUTHORIZE_METADATA_KEY = 'AUTHORIZE_METADATA_KEY';
 type AuthorizeMetadata = {

@@ -1,4 +1,5 @@
 import { ConflictException } from '@nestjs/common';
+
 import { ExceptionErrorType } from '../types';
 
 export class UserExistsException extends ConflictException {

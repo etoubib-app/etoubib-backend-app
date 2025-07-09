@@ -1,12 +1,13 @@
 import {
   CreateDateColumn,
-  UpdateDateColumn,
+  DeleteDateColumn,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 export abstract class BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @CreateDateColumn({
     name: 'created_at',
@@ -15,7 +16,7 @@ export abstract class BaseEntity {
     update: false,
     nullable: false,
   })
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn({
     name: 'updated_at',
@@ -24,5 +25,14 @@ export abstract class BaseEntity {
     onUpdate: 'now()',
     nullable: false,
   })
-  updatedAt: Date;
+  updatedAt!: Date;
+
+  @DeleteDateColumn({
+    name: 'deleted_at',
+    type: 'timestamp with time zone',
+    default: null,
+    onUpdate: 'now()',
+    nullable: true,
+  })
+  deletedAt?: Date;
 }

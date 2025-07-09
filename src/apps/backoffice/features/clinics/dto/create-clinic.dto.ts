@@ -8,7 +8,7 @@ export class CreateClinicDto {
   })
   @IsNotEmpty()
   @IsString()
-  name: string;
+  name!: string;
 
   @ApiProperty({
     description: 'The email of the clinic',
@@ -16,5 +16,5 @@ export class CreateClinicDto {
   })
   @IsNotEmpty()
   @IsEmail()
-  email: string;
+  email!: string;
 }

@@ -7,15 +7,14 @@ import {
   Param,
   Patch,
   Post,
-  Scope,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
-import { ClinicsService } from './clinics.service';
 import { CreateClinicDto } from './dto/create-clinic.dto';
 import { UpdateClinicDto } from './dto/update-clinic.dto';
+import { ClinicsService } from './services/clinics.service';
 
-@Injectable({ scope: Scope.DEFAULT })
+@Injectable()
 @BackofficeController('clinics')
 export class ClinicsController {
   constructor(private readonly clinicsService: ClinicsService) {}

@@ -1,4 +1,5 @@
 import * as bcrypt from 'bcryptjs';
+
 import { BYCRYPT_HASH_REGEX } from '../constants';
 
 export function isBcryptHash(value: string): boolean {

@@ -29,7 +29,7 @@ export interface Response<T> {
 export class TransformInterceptor<T>
   implements NestInterceptor<T, Response<T>>
 {
-  private message: string;
+  private message!: string;
 
   intercept(
     context: ExecutionContext,
@@ -46,7 +46,9 @@ export class TransformInterceptor<T>
         break;
       case 'POST':
         this.message =
-          statusCode === HttpStatus.CREATED ? Message.CREATED : Message.DEFAULT;
+          statusCode === +HttpStatus.CREATED
+            ? Message.CREATED
+            : Message.DEFAULT;
         break;
       case 'PUT':
         this.message = Message.UPDATED;
