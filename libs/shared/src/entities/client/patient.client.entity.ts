@@ -6,19 +6,19 @@ import { AddressEntity } from './address.client.entity';
 @Entity({ name: 'patients' })
 export class PatientEntity extends BaseEntity {
     @Column({ type: 'varchar', length: 100, name: 'first_name' })
-    firstName: string;
+    firstName!: string;
 
     @Column({ type: 'varchar', length: 100, name: 'last_name' })
-    lastName: string;
+    lastName!: string;
 
     @Column({ type: 'varchar', length: 20, name: 'phone_number' })
-    phoneNumber: string;
+    phoneNumber!: string;
 
     @Column({ type: 'varchar', length: 20, unique: true })
-    cin: string;
+    cin!: string;
 
     @Column({ name: 'birth_date', type: 'date' })
-    birthDate: Date;
+    birthDate!: Date;
 
     @Column({ type: 'varchar', length: 100, name: 'guardian_first_name', nullable: true })
     guardianFirstName?: string;
@@ -39,10 +39,10 @@ export class PatientEntity extends BaseEntity {
     guardian?: PatientEntity;
 
     @OneToMany(() => PatientEntity, patient => patient.guardian)
-    members: PatientEntity[];
+    members!: PatientEntity[];
 
     @OneToMany(() => FormAnswerEntity, answer => answer.patient)
-    answers: FormAnswerEntity[];
+    answers!: FormAnswerEntity[];
 
     get isMinor(): boolean {
         if (!this.birthDate) throw Error("birth date must be provided.")

@@ -5,12 +5,12 @@ import { QuestionEntity } from './question.client.entity';
 @Entity({ name: 'forms' })
 export class FormEntity extends BaseEntity {
   @Column({ type: 'varchar' })
-  title: string;
+  title!: string;
 
   // TODO: add status ( published, draft ) ?
 
   @OneToMany(() => QuestionEntity, question => question.form)
-  questions: QuestionEntity[];
+  questions!: QuestionEntity[];
 
   constructor(data: Partial<FormEntity> = {}) {
     super();

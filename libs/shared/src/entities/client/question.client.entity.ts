@@ -12,22 +12,22 @@ import { FormEntity } from './form.client.entity';
 @Entity({ name: 'questions' })
 export class QuestionEntity extends BaseEntity {
   @Column({ type: 'text' })
-  question: string;
+  question!: string;
 
   @Column({ type: "int" })
-  position: number;
+  position!: number;
 
   @Column({ type: 'varchar' })
-  type: TQuestionType;
+  type!: TQuestionType;
 
   @Column({ name: 'options_json', type: 'json', nullable: true })
-  optionsJson: string[] | null;
+  optionsJson?: string[] | null;
 
   @ManyToOne(() => FormEntity, form => form.questions, { onDelete: 'CASCADE' })
-  form: FormEntity;
+  form!: FormEntity;
 
   @OneToMany(() => FormAnswerEntity, answer => answer.question)
-  answers: FormAnswerEntity[];
+  answers!: FormAnswerEntity[];
 
   constructor(data: Partial<QuestionEntity> = {}) {
     super();

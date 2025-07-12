@@ -9,15 +9,15 @@ export class FormAnswerEntity extends BaseEntity {
   @ManyToOne(() => PatientEntity, (patient) => patient.answers, {
     onDelete: 'CASCADE',
   })
-  patient: PatientEntity;
+  patient!: PatientEntity;
 
   @ManyToOne(() => QuestionEntity, (question) => question.answers, {
     onDelete: 'CASCADE',
   })
-  question: QuestionEntity;
+  question!: QuestionEntity;
 
   @Column({ name: 'answer_json', type: 'json', nullable: true })
-  answer: boolean | string | string[] | null;
+  answer?: boolean | string | string[] | null;
 
   constructor(data: Partial<FormAnswerEntity> = {}) {
     super();
