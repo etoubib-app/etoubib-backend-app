@@ -12,8 +12,7 @@ export abstract class BaseEntity {
   @CreateDateColumn({
     name: 'created_at',
     type: 'timestamp with time zone',
-    default: 'now()',
-    update: false,
+    default: () => 'CURRENT_TIMESTAMP',
     nullable: false,
   })
   createdAt!: Date;
@@ -21,8 +20,8 @@ export abstract class BaseEntity {
   @UpdateDateColumn({
     name: 'updated_at',
     type: 'timestamp with time zone',
-    default: 'now()',
-    onUpdate: 'now()',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
     nullable: false,
   })
   updatedAt!: Date;
@@ -33,5 +32,5 @@ export abstract class BaseEntity {
     nullable: true,
     default: null,
   })
-  deletedAt?: Date;
+  deletedAt!: Date;
 }
