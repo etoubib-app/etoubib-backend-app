@@ -1,4 +1,5 @@
 import { UnauthorizedException } from '@nestjs/common';
+
 import { ExceptionErrorType } from '../types';
 
 export class InvalidTokenException extends UnauthorizedException {

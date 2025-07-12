@@ -1,27 +1,19 @@
-import { AllBackofficeEntities } from '@lib/shared/entities/backoffice';
-import { BACKOFFICE_CONNECTION } from './database.constant';
-import { getBoSourceOptions } from '@lib/shared/config';
 import { Module } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 
-const BO_SCHEMA = 'backoffice';
+import { getBoConnection } from './connection.bo';
+import { BACKOFFICE_CONNECTION } from './database.constant';
 
 const boConnectionFactory = {
   provide: BACKOFFICE_CONNECTION,
   useFactory: async (): Promise<DataSource> => {
-    return new DataSource({
-      ...getBoSourceOptions(),
-      entities: AllBackofficeEntities,
-      migrations: undefined,
-      schema: BO_SCHEMA,
-      name: BO_SCHEMA,
-      poolSize: 1,
-    });
+    return getBoConnection();
   },
 };
 
 @Module({
+  imports: [],
   providers: [boConnectionFactory],
-  exports: [BACKOFFICE_CONNECTION],
+  exports: [boConnectionFactory, BACKOFFICE_CONNECTION],
 })
 export class BoDatabaseModule {}

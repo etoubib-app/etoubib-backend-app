@@ -1,42 +1,38 @@
 import { Module, Scope, UnauthorizedException } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
-
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { CLIENT_CONNECTION } from './database.constant';
+import { REQUEST } from '@nestjs/core';
+import { Request } from 'express';
+
+import { JWTAuthModule, JWTAuthService } from '../jwt-auth';
 import { getTenantConnection } from './connection.client';
-import { TClientJwtPayload } from 'src/apps/client/features/auth/types';
-import { JWTAuthHelper } from '../jwt-auth/jwt-auth.helper';
-import { JWTAuthModule } from '../jwt-auth/jwt-auth.module';
+import { CLIENT_CONNECTION } from './database.constant';
 
 const clientConnectionFactory = {
   scope: Scope.REQUEST,
   provide: CLIENT_CONNECTION,
   useFactory: async (
     request: Request,
-    jwtAuthHelper: JWTAuthHelper<TClientJwtPayload>,
+    jwtAuthService: JWTAuthService,
     config: ConfigService,
   ) => {
-    const schemaName = request.headers['x-tenant-id'] as string | undefined;
-    const authorization = request.headers['authorization'] as
-      | string
-      | undefined;
-
-    if (authorization) {
-      const token = authorization.split(' ')?.[1];
-      const secret = config.getOrThrow<string>('jwt.client.secret');
-      const payload = jwtAuthHelper.verifyToken({ token, secret: secret! });
-      return await getTenantConnection(payload.tenantId);
-    } else if (schemaName) {
-      return await getTenantConnection(schemaName);
-    } else {
-      throw new UnauthorizedException();
+    try {
+      const authorization = request.headers.authorization;
+      if (authorization) {
+        const token = authorization.split(' ')?.[1];
+        const secret = config.getOrThrow<string>('jwt.client.secret');
+        const payload = jwtAuthService.verifyToken({ token, secret: secret });
+        return await getTenantConnection(payload.tenantId);
+      }
+    } catch (error) {
+      console.log('Error while getting tenant connection:', error);
     }
+    throw new UnauthorizedException();
   },
-  inject: [REQUEST, JWTAuthHelper, ConfigService],
+  inject: [REQUEST, JWTAuthService, ConfigService],
 };
 
 @Module({
-  imports: [JWTAuthModule, ConfigModule],
+  imports: [ConfigModule, JWTAuthModule],
   providers: [clientConnectionFactory],
   exports: [CLIENT_CONNECTION],
 })

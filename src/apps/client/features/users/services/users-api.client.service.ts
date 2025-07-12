@@ -1,35 +1,36 @@
+import { type TBaseMapperFormat } from '@lib/shared/base';
+import { ClientCreateUserDto } from '@lib/shared/dto';
+import { ClientUser } from '@lib/shared/entities';
 import {
-  ClientUserEntity,
   ForeignKeyConflictException,
   UserExistsException,
-} from '@lib/shared';
+} from '@lib/shared/exceptions';
+import {
+  ClientUserMapper,
+  type TClientUserMapperResponse,
+} from '@lib/shared/mappers';
+import { CLIENT_CONNECTION } from '@lib/shared/modules';
+import { DBErrorCode } from '@lib/shared/types';
 import {
   Inject,
   Injectable,
   InternalServerErrorException,
   Scope,
 } from '@nestjs/common';
-import {
-  ClientUserMapper,
-  TClientUserMapperResponse,
-} from '../users.client.mapper';
-import { CLIENT_CONNECTION } from '@lib/shared/modules';
-import { TBaseMapperFormat } from '@lib/shared/base';
 import { DataSource, Repository } from 'typeorm';
-import { DBErrorCode } from '@lib/shared/types';
-import { ClientCreateUserDto } from '../dtos';
+
 import { ClientUsersService } from './users.client.service';
 
 // TODO : use ClientUserMapper in ClientUserEntity
 @Injectable({ scope: Scope.REQUEST })
 export class ClientUsersApiService {
-  private readonly clientUsersRepository: Repository<ClientUserEntity>;
+  private readonly clientUsersRepository: Repository<ClientUser>;
 
   constructor(
     @Inject(CLIENT_CONNECTION) connection: DataSource,
     private readonly clientUsersService: ClientUsersService,
   ) {
-    this.clientUsersRepository = connection.getRepository(ClientUserEntity);
+    this.clientUsersRepository = connection.getRepository(ClientUser);
   }
 
   async getUsers(
@@ -47,7 +48,7 @@ export class ClientUsersApiService {
     format: TBaseMapperFormat = 'toDtoWithRelations',
   ): Promise<TClientUserMapperResponse> {
     const userEntity = await this.clientUsersRepository.findOneByOrFail({ id });
-    this.clientUsersService.checkUserStatus(userEntity); // check user status
+    userEntity.checkUserStatus();
 
     const clientUserMapper = new ClientUserMapper();
     return clientUserMapper.transform(userEntity, format);
@@ -64,12 +65,13 @@ export class ClientUsersApiService {
       userEntity = await this.clientUsersRepository.save(userEntity);
       return clientUserMapper.transform(userEntity, format);
     } catch (error) {
-      if (error.code == DBErrorCode.PgUniqueConstraintViolation) {
+      const { code } = error as { code: unknown };
+      if (code == DBErrorCode.PgUniqueConstraintViolation) {
         throw new UserExistsException(userDto.email);
       }
       if (
-        error.code == DBErrorCode.PgForeignKeyConstraintViolation ||
-        error.code == DBErrorCode.PgNotNullConstraintViolation
+        code == DBErrorCode.PgForeignKeyConstraintViolation ||
+        code == DBErrorCode.PgNotNullConstraintViolation
       ) {
         throw new ForeignKeyConflictException();
       }
