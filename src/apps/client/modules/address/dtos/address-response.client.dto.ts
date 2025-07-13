@@ -3,14 +3,14 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class AddressResponseDto extends BaseResponseDto {
     @ApiProperty({ example: '123 Main Street' })
-    address: string;
+    address!: string;
 
     @ApiProperty({ example: '20250' })
-    postalCode: string;
+    postalCode?: string;
 
     @ApiProperty({ example: 'Casablanca' })
-    city: string;
+    city?: string;
 
     @ApiProperty({ example: 'Morocco' })
-    country: string;
+    country?: string;
 }

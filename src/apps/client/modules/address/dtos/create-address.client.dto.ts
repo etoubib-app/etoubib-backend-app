@@ -5,25 +5,25 @@ export class CreateAddressDto {
     @IsString()
     @MaxLength(200)
     @ApiProperty({ example: '123 Main Street, Casablanca Morocco' })
-    address: string;
+    address!: string;
 
     @IsOptional()
     @IsString()
     @MaxLength(20)
     @ApiProperty({ example: '20250' })
-    postalCode: string;
+    postalCode?: string;
 
     @IsOptional()
     @IsString()
     @MaxLength(100)
     @IsAlphanumeric()
     @ApiProperty({ example: 'Casablanca' })
-    city: string;
+    city?: string;
 
     @IsOptional()
     @IsString()
     @MaxLength(100)
     @IsAlphanumeric()
     @ApiProperty({ example: 'Morocco' })
-    country: string;
+    country?: string;
 }

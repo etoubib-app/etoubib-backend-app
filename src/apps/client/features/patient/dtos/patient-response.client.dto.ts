@@ -5,31 +5,31 @@ import { AddressResponseDto } from 'src/apps/client/modules/address/dtos';
 
 export class PatientResponseDto extends BaseResponseDto {
     @ApiProperty({ example: 'John' })
-    firstName: string;
+    firstName!: string;
 
     @ApiProperty({ example: 'Doe' })
-    lastName: string;
+    lastName!: string;
 
     @ApiProperty({ example: '0000' })
-    phoneNumber: string;
+    phoneNumber!: string;
 
     @ApiProperty({ example: '1234' })
-    cin: string;
+    cin!: string;
 
     @ApiProperty({ example: '2000-12-21' })
-    birthDate: string;
+    birthDate!: string;
 
     @ApiProperty({ example: "CR12345", nullable: true })
-    cnss: string | null;
+    cnss?: string | null;
 
-    @ApiProperty({ example: null, nullable: true })
-    guardianFirstName: string | null;
+    @ApiProperty({ nullable: true })
+    guardianFirstName?: string | null;
 
-    @ApiProperty({ example: null, nullable: true })
-    guardianLastName: string | null;
+    @ApiProperty({ nullable: true })
+    guardianLastName?: string | null;
 
-    @ApiProperty({ example: null, nullable: true })
-    guardianPhoneNumber: string | null;
+    @ApiProperty({ nullable: true })
+    guardianPhoneNumber?: string | null;
 
     @ApiProperty({
         type: () => AddressResponseDto, nullable: true, example: {
@@ -43,5 +43,5 @@ export class PatientResponseDto extends BaseResponseDto {
         }
     })
     @Type(() => AddressResponseDto)
-    address: AddressResponseDto | null;
+    address?: AddressResponseDto | null;
 }

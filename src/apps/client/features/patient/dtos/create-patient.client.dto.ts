@@ -21,26 +21,26 @@ export class CreatePatientDto {
   @MaxLength(100)
   @IsAlphanumeric()
   @ApiProperty({ example: 'John' })
-  firstName: string;
+  firstName!: string;
 
   @IsString()
   @MaxLength(100)
   @IsAlphanumeric()
   @ApiProperty({ example: 'Doe' })
-  lastName: string;
+  lastName!: string;
 
   @IsString()
   @MaxLength(20)
   @ApiProperty({ example: '0000' })
-  phoneNumber: string;
+  phoneNumber!: string;
 
   @IsDateString()
   @ApiProperty({ example: '2000-12-21' })
-  birthDate: string;
+  birthDate!: string;
 
   @IsString()
   @ApiProperty({ example: 'CR12345' })
-  cin: string;
+  cin!: string;
 
   @IsOptional()
   @IsString()
