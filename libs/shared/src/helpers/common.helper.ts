@@ -12,3 +12,7 @@ export function generateClinicTenantId(clinic: BoClinic): void {
   clinic.tenantId = generateId(clinic.name, new Date(clinic.createdAt));
   // clinic.tenantId = generateId(clinic.name, new Date('2023-01-01T00:00:00Z'));
 }
+
+export function getEnumValues<T extends Record<string, string>>(obj: T) {
+  return Object.values(obj);
+}
