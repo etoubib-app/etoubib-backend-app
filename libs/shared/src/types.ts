@@ -25,7 +25,12 @@ export type TExceptionErrorType = ExtractEnumTypes<typeof ExceptionErrorType>;
 
 export type TPaginatedData<TData> = {
   data: TData[];
-  page: number;
-  total: number;
-  limit: number;
+  meta: {
+    page: number;
+    total: number;
+    limit: number;
+    pages: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+  }
 }
