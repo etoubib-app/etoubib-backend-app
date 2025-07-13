@@ -1,12 +1,12 @@
 import { PaginationQueryDto } from '@lib/shared/dto';
 import { DBErrorCode, TPaginatedData } from '@lib/shared/types';
 import { BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
-import { Repository, DeepPartial, FindOneOptions, FindOptionsWhere, FindManyOptions, FindOptionsOrder } from 'typeorm';
+import { Repository, DeepPartial, FindOneOptions, FindOptionsWhere, FindManyOptions, FindOptionsOrder, EntityNotFoundError } from 'typeorm';
 import { QueryFailedError } from 'typeorm/error/QueryFailedError';
 
 export abstract class BaseService<Entity extends { id: string, createdAt: Date }> {
     protected entityName: string
-    private defaultPerPage = 10
+    protected defaultPerPage = 10
 
     constructor(protected readonly repository: Repository<Entity>) {
         this.entityName = this.repository.metadata.name;
@@ -20,7 +20,13 @@ export abstract class BaseService<Entity extends { id: string, createdAt: Date }
             order: { createdAt: 'DESC' } as FindOptionsOrder<Entity>,
             ...options,
         });
-        return { data, page, total, limit };
+
+        const totalPages = Math.ceil(total / limit);
+        if (totalPages !== 0 && page > totalPages) {
+            throw new NotFoundException({ message: `Page ${page} is out of range. There are only ${totalPages} page(s) available.` });
+        }
+
+        return { data, meta: { page, limit, total, pages: totalPages, hasPrev: page > 1, hasNext: page < totalPages } };
     }
 
     async findOne(id: string, options?: FindOneOptions<Entity>): Promise<Entity> {
@@ -49,11 +55,11 @@ export abstract class BaseService<Entity extends { id: string, createdAt: Date }
         }
     }
 
-    async remove(id: string): Promise<boolean> {
+    async remove(id: string): Promise<{ message: string }> {
         const entity = await this.findOne(id);
         try {
             await this.repository.remove(entity);
-            return true;
+            return { message: `${this.entityName} with id ${id} has been deleted` };
         } catch (error) {
             this.handleDbError(error);
         }
@@ -61,6 +67,7 @@ export abstract class BaseService<Entity extends { id: string, createdAt: Date }
 
     // TODO: move to a helper
     protected handleDbError(error: any): never {
+        // DB constraint errors
         if (error instanceof QueryFailedError) {
             const err = error as QueryFailedError & { code?: string; detail?: string };
 
@@ -89,6 +96,12 @@ export abstract class BaseService<Entity extends { id: string, createdAt: Date }
                         detail: err.detail,
                     });
             }
+        }
+
+        // ORM errors ( findOneOrFail , findOneByOrFailBy... )
+        if (error instanceof EntityNotFoundError) {
+            // TODO: return error detail
+            throw new NotFoundException({ message: 'Entity not found' });
         }
 
         throw error;
