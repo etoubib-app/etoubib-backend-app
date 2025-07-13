@@ -9,11 +9,11 @@ import { ClientJwtStrategy } from './strategies/jwt.client.strategy';
 
 @Module({
   imports: [
-    ConfigModule,
     JwtModule,
+    ConfigModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
-  providers: [ClientJwtAuthGuard, JWTAuthService, ClientJwtStrategy],
-  exports: [ClientJwtAuthGuard, JWTAuthService, ClientJwtStrategy],
+  providers: [ClientJwtAuthGuard, ClientJwtStrategy, JWTAuthService],
+  exports: [ClientJwtAuthGuard, JWTAuthService, ConfigModule]  // TODO: without exporting ConfigModule guard fails to work
 })
-export class JWTAuthModule {}
+export class JWTAuthModule { }

@@ -3,6 +3,8 @@ import { DataSource, Repository } from 'typeorm';
 import { BoClinic } from '../../../entities';
 import { BACKOFFICE_CONNECTION } from '../database.constant';
 
+// TODO: prefix with BO
+
 export const CLINIC_REPOSITORY_TOKEN = 'ClinicRepositoryToken';
 
 export const ClinicRepositoryProvider = {
