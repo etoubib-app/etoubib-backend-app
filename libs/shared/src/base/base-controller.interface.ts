@@ -11,6 +11,7 @@ export interface IBaseCRUDController<
   findOne(id: string): Promise<Entity>;
   create(dto: CreateDto): Promise<Entity>;
   update(id: string, dto: UpdateDto): Promise<Entity>;
-  delete?(id: string): Promise<void>;
+  delete?(id: string): Promise<{ message: string }>;
+  softDelete?(id: string): Promise<{ message: string }>;
   restore?(id: string): Promise<Entity>;
 }

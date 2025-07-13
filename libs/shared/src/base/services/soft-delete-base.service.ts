@@ -1,5 +1,6 @@
 import { Repository, } from 'typeorm';
 import { BaseService } from './base.service';
+import { BadRequestException } from '@nestjs/common';
 
 export abstract class SoftDeleteBaseService<
   Entity extends { id: string; createdAt: Date, deletedAt: Date },
@@ -9,10 +10,13 @@ export abstract class SoftDeleteBaseService<
     super(repository);
   }
 
-  override async remove(id: string): Promise<boolean> {
+  override async remove(id: string): Promise<{ message: string }> {
     try {
       const result = await this.repository.softDelete(id);
-      return !!result.affected;
+      if (!result.affected) {
+        throw new BadRequestException(`${this.entityName} with id ${id} not found or already deleted`);
+      }
+      return { message: `${this.entityName} with id ${id} has been deleted` }
     } catch (error) {
       this.handleDbError(error);
     }
