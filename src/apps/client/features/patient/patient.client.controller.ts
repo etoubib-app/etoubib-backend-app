@@ -1,13 +1,12 @@
-import { ApiResponseWithData, ClientController } from '@lib/shared';
+import { ApiResponseWithData, ClientController, PatientEntity } from '@lib/shared';
 import { Body, Delete, Get, HttpCode, HttpStatus, Injectable, Param, ParseUUIDPipe, Patch, Post, Query, Scope, UseGuards } from '@nestjs/common';
 
 import { ApiConflictResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { ClientJwtAuthGuard } from '../auth/guards/jwt-auth.client.guard';
-import { PatientEntity } from '@lib/shared/entities/client/patient.client.entity';
 import { PatientsApiService } from './services/patients-api.client.service';
 import { IBaseCRUDController } from '@lib/shared/base/base-controller.interface';
 import { CreatePatientDto, PatientResponseDto, UpdatePatientDto } from './dtos';
 import { PaginationQueryDto } from '@lib/shared/dto';
+import { ClientJwtAuthGuard } from '@lib/shared/modules/jwt-auth';
 
 @ApiTags('Patients')
 @UseGuards(ClientJwtAuthGuard)
@@ -48,8 +47,8 @@ export class PatientsController implements IBaseCRUDController<PatientEntity, Cr
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ description: 'Delete patient' })
-  async delete(@Param('id', ParseUUIDPipe) id: string) {
-    this.patientsApiService.remove(id)
+  async softDelete(@Param('id', ParseUUIDPipe) id: string) {
+    return this.patientsApiService.remove(id)
   }
 
   @Post('restore/:id')

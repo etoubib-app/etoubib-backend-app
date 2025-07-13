@@ -1,10 +1,9 @@
 import { Inject, Injectable, NotFoundException, Scope } from '@nestjs/common';
 import { CLIENT_CONNECTION } from '@lib/shared/modules';
 import { DataSource, Repository } from 'typeorm';
-import { PatientEntity } from '@lib/shared/entities/client/patient.client.entity';
 import { SoftDeleteBaseService } from '@lib/shared/base/services/soft-delete-base.service';
-import { AddressEntity } from '@lib/shared/entities/client/address.client.entity';
 import { CreatePatientDto, UpdatePatientDto } from '../dtos';
+import { AddressEntity, PatientEntity } from '@lib/shared';
 
 @Injectable({ scope: Scope.REQUEST })
 export class PatientsApiService extends SoftDeleteBaseService<PatientEntity> {
@@ -50,8 +49,8 @@ export class PatientsApiService extends SoftDeleteBaseService<PatientEntity> {
   }
 
   override async update(id: string, dto: UpdatePatientDto): Promise<PatientEntity> {
-    const patient = await this.patientRepository.findOneByOrFail({ id });
     try {
+      const patient = await this.patientRepository.findOneByOrFail({ id });
       if (dto.address_id) {
         const existingAddress = await this.addressRepository.findOneBy({ id: dto.address_id });
         if (!existingAddress) throw new NotFoundException({ message: `Address with id ${dto.address_id} not found` });
