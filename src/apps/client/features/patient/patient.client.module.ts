@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { ClientDatabaseModule } from '@lib/shared/modules';
 import { PatientsController } from './patient.client.controller';
 import { PatientsApiService } from './services/patients-api.client.service';
-import { ClientAuthModule } from '../auth/auth.client.module';
+import { JWTAuthModule } from '@lib/shared/modules/jwt-auth';
 
 @Module({
-  imports: [ClientDatabaseModule, ClientAuthModule],
+  imports: [ClientDatabaseModule, JWTAuthModule],
   controllers: [PatientsController],
   providers: [PatientsApiService],
   exports: [],
