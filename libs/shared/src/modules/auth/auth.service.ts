@@ -7,14 +7,12 @@ import {
   ClientUserLoginResponseDto,
   UserLoginDto,
 } from '../../dto';
-import { BoClinic } from '../../entities';
 import { BoUserEntity } from '../../entities/backoffice';
 import { ClientUser } from '../../entities/client';
 import { InvalidCredentialsException } from '../../exceptions';
 import { BoUserMapper } from '../../mappers/users.bo.mapper';
 import { ClientUserMapper } from '../../mappers/users.client.mapper';
 import { getTenantConnection } from '../database/connection.client';
-import { CLINIC_REPOSITORY_TOKEN } from '../database/repository-provider';
 import { USER_REPOSITORY_TOKEN } from '../database/repository-provider/user-repository.provider';
 import { JWTAuthService } from '../jwt-auth';
 import { JwtPayload } from './auth.types';
@@ -23,12 +21,10 @@ import { JwtPayload } from './auth.types';
 export class AuthService {
   constructor(
     private readonly configService: ConfigService,
-    @Inject(CLINIC_REPOSITORY_TOKEN)
-    private readonly clinicsRepository: Repository<BoClinic>,
     @Inject(USER_REPOSITORY_TOKEN)
     private readonly usersRepository: Repository<BoUserEntity>,
     private readonly jwtAuthService: JWTAuthService,
-  ) {}
+  ) { }
 
   async clientLogin(
     { email, password, remember_me }: UserLoginDto,
