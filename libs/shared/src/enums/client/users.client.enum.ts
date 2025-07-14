@@ -1,9 +1,9 @@
 import { ExtractEnumTypes } from '@lib/shared/helpers';
 
-export const ClientUserStatus = {
+export const UserStatus = {
   active: 'active',
   blocked: 'blocked',
   inactive: 'inactive',
   pending_invitation: 'pending_invitation',
 } as const;
-export type TClientUserStatus = ExtractEnumTypes<typeof ClientUserStatus>;
+export type TUserStatus = ExtractEnumTypes<typeof UserStatus>;

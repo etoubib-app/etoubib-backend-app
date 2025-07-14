@@ -1,5 +1,5 @@
 import { TBoUserStatus } from '@lib/shared/enums/backoffice/users.bo.enum';
-import { ClientUserStatus } from '@lib/shared/enums/client';
+import { UserStatus } from '@lib/shared/enums/client';
 import { bycryptHashPassword } from '@lib/shared/helpers';
 import { UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
@@ -35,7 +35,7 @@ export class BoUserEntity extends BaseEntity {
   @Exclude()
   private _password!: string;
 
-  @Column({ type: 'varchar', default: ClientUserStatus.active })
+  @Column({ type: 'varchar', default: UserStatus.active })
   status!: TBoUserStatus;
 
   constructor(data: Partial<BoUserEntity> = {}) {
@@ -56,10 +56,10 @@ export class BoUserEntity extends BaseEntity {
   }
 
   checkUserStatus(): boolean {
-    if (this.status == ClientUserStatus.inactive) {
+    if (this.status == UserStatus.inactive) {
       throw new UnauthorizedException('User inactive not authorized to login');
     }
-    if (this.status == ClientUserStatus.blocked) {
+    if (this.status == UserStatus.blocked) {
       throw new UnauthorizedException('User blocked not authorized to login');
     }
     return true;

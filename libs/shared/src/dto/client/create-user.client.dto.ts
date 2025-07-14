@@ -13,7 +13,7 @@ import {
 
 import { CLIENT_USER_PASSWORD_REGEX } from '../../constants';
 
-export class ClientCreateUserDto {
+export class CreateUserDto {
   @IsNotEmpty()
   @MaxLength(100)
   @IsAlphanumeric()
@@ -26,7 +26,6 @@ export class ClientCreateUserDto {
   @ApiProperty({ example: 'Doe' })
   lastName!: string;
 
-  // TODO : add email unique validator
   @IsNotEmpty()
   @IsEmail()
   @MaxLength(100)

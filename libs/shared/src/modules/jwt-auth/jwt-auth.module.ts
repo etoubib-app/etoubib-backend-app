@@ -3,9 +3,9 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 
-import { ClientJwtAuthGuard } from './guards/jwt-auth.client.guard';
+import { JwtAuthGuard } from './guards/jwt-auth.client.guard';
 import { JWTAuthService } from './services/jwt-auth.service';
-import { ClientJwtStrategy } from './strategies/jwt.client.strategy';
+import { JwtStrategy } from './strategies/jwt.client.strategy';
 
 @Module({
   imports: [
@@ -13,7 +13,7 @@ import { ClientJwtStrategy } from './strategies/jwt.client.strategy';
     ConfigModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
-  providers: [ClientJwtAuthGuard, ClientJwtStrategy, JWTAuthService],
-  exports: [ClientJwtAuthGuard, JWTAuthService, ConfigModule]  // TODO: without exporting ConfigModule guard fails to work
+  providers: [JwtAuthGuard, JwtStrategy, JWTAuthService],
+  exports: [JwtAuthGuard, JWTAuthService, ConfigModule]  // TODO: without exporting ConfigModule guard fails to work
 })
 export class JWTAuthModule { }
