@@ -24,7 +24,7 @@ export class FormApiService extends SoftDeleteBaseService<FormEntity> {
       relations: { questions: true },
       order: {
         createdAt: 'DESC',
-        questions: { position: 'ASC' },
+        // questions: { position: 'ASC' } // TODO: check why it's breaks pagination
       },
     })
   }
@@ -49,8 +49,8 @@ export class FormApiService extends SoftDeleteBaseService<FormEntity> {
         queryRunner.manager.create(QuestionEntity, { ...question, position: index + 1, form: savedForm }),
       );
       await queryRunner.manager.save(questions);
-
       await queryRunner.commitTransaction();
+
       return { ...savedForm, questions };
     } catch (error) {
       await queryRunner.rollbackTransaction();
