@@ -1,8 +1,8 @@
 import { PaginationQueryDto } from '@lib/shared/dto';
-import { DBErrorCode, TPaginatedData } from '@lib/shared/types';
-import { BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
-import { Repository, DeepPartial, FindOneOptions, FindOptionsWhere, FindManyOptions, FindOptionsOrder, EntityNotFoundError } from 'typeorm';
-import { QueryFailedError } from 'typeorm/error/QueryFailedError';
+import { handleDbError } from '@lib/shared/helpers';
+import { TPaginatedData } from '@lib/shared/types';
+import { NotFoundException } from '@nestjs/common';
+import { Repository, DeepPartial, FindOneOptions, FindOptionsWhere, FindManyOptions, FindOptionsOrder } from 'typeorm';
 
 export abstract class BaseService<Entity extends { id: string, createdAt: Date }> {
     protected entityName: string
@@ -65,45 +65,7 @@ export abstract class BaseService<Entity extends { id: string, createdAt: Date }
         }
     }
 
-    // TODO: move to a helper
     protected handleDbError(error: any): never {
-        // DB constraint errors
-        if (error instanceof QueryFailedError) {
-            const err = error as QueryFailedError & { code?: string; detail?: string };
-
-            switch (err.code) {
-                case DBErrorCode.PgUniqueConstraintViolation:
-                    throw new ConflictException({
-                        message: 'Unique constraint violated',
-                        detail: err.detail,
-                    });
-
-                case DBErrorCode.PgForeignKeyConstraintViolation:
-                    throw new BadRequestException({
-                        message: 'Invalid reference (foreign key violation)',
-                        detail: err.detail,
-                    });
-
-                case DBErrorCode.PgNotNullConstraintViolation:
-                    throw new BadRequestException({
-                        message: 'Missing required field (not null)',
-                        detail: err.detail,
-                    });
-
-                default:
-                    throw new BadRequestException({
-                        message: 'Database constraint error',
-                        detail: err.detail,
-                    });
-            }
-        }
-
-        // ORM errors ( findOneOrFail , findOneByOrFailBy... )
-        if (error instanceof EntityNotFoundError) {
-            // TODO: return error detail
-            throw new NotFoundException({ message: 'Entity not found' });
-        }
-
-        throw error;
+        handleDbError(error);
     }
 }
