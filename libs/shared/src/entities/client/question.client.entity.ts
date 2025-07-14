@@ -1,9 +1,4 @@
-import {
-  Entity,
-  Column,
-  ManyToOne,
-  OneToMany,
-} from 'typeorm';
+import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
 import { FormAnswerEntity } from './form-answer.client.entity';
 import { BaseEntity } from '@lib/shared/base';
 import { TQuestionType } from '@lib/shared/enums/client';
@@ -14,7 +9,7 @@ export class QuestionEntity extends BaseEntity {
   @Column({ type: 'text' })
   question!: string;
 
-  @Column({ type: "int" })
+  @Column({ type: 'int' })
   position!: number;
 
   @Column({ type: 'varchar' })
@@ -23,10 +18,12 @@ export class QuestionEntity extends BaseEntity {
   @Column({ name: 'options_json', type: 'json', nullable: true })
   optionsJson?: string[] | null;
 
-  @ManyToOne(() => FormEntity, form => form.questions, { onDelete: 'CASCADE' })
+  @ManyToOne(() => FormEntity, (form) => form.questions, {
+    onDelete: 'CASCADE',
+  })
   form!: FormEntity;
 
-  @OneToMany(() => FormAnswerEntity, answer => answer.question)
+  @OneToMany(() => FormAnswerEntity, (answer) => answer.question)
   answers!: FormAnswerEntity[];
 
   constructor(data: Partial<QuestionEntity> = {}) {

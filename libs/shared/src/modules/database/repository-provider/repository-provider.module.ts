@@ -9,4 +9,4 @@ import { UserRepositoryProvider } from './user-repository.provider';
   providers: [ClinicRepositoryProvider, UserRepositoryProvider],
   exports: [ClinicRepositoryProvider, UserRepositoryProvider],
 })
-export class RepositoriesModule { } // TODO: prefix with BO
+export class RepositoriesModule {} // TODO: prefix with BO

@@ -13,7 +13,7 @@ export class PatientApiService extends SoftDeleteBaseService<PatientEntity> {
   constructor(@Inject(CLIENT_CONNECTION) protected connection: DataSource) {
     super(connection.getRepository(PatientEntity));
     this.addressRepository = connection.getRepository(AddressEntity);
-    this.patientRepository = this.repository
+    this.patientRepository = this.repository;
   }
 
   override async create(dto: CreatePatientDto): Promise<PatientEntity> {
@@ -28,11 +28,19 @@ export class PatientApiService extends SoftDeleteBaseService<PatientEntity> {
         await queryRunner.manager.save(address);
       }
       if (dto.address_id) {
-        address = await queryRunner.manager.findOneBy(AddressEntity, { id: dto.address_id });
-        if (!address) throw new NotFoundException(`Address with id ${dto.address_id} not found`);
+        address = await queryRunner.manager.findOneBy(AddressEntity, {
+          id: dto.address_id,
+        });
+        if (!address)
+          throw new NotFoundException(
+            `Address with id ${dto.address_id} not found`,
+          );
       }
 
-      const patient = queryRunner.manager.create(PatientEntity, { ...dto, ...(address ? { address } : {}) });
+      const patient = queryRunner.manager.create(PatientEntity, {
+        ...dto,
+        ...(address ? { address } : {}),
+      });
       const savedPatient = await queryRunner.manager.save(patient);
       await queryRunner.commitTransaction();
 
@@ -45,12 +53,20 @@ export class PatientApiService extends SoftDeleteBaseService<PatientEntity> {
     }
   }
 
-  override async update(id: string, dto: UpdatePatientDto): Promise<PatientEntity> {
+  override async update(
+    id: string,
+    dto: UpdatePatientDto,
+  ): Promise<PatientEntity> {
     try {
       const patient = await this.patientRepository.findOneByOrFail({ id });
       if (dto.address_id) {
-        const existingAddress = await this.addressRepository.findOneBy({ id: dto.address_id });
-        if (!existingAddress) throw new NotFoundException({ message: `Address with id ${dto.address_id} not found` });
+        const existingAddress = await this.addressRepository.findOneBy({
+          id: dto.address_id,
+        });
+        if (!existingAddress)
+          throw new NotFoundException({
+            message: `Address with id ${dto.address_id} not found`,
+          });
         patient.address = existingAddress;
       }
 

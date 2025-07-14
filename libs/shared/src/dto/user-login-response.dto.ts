@@ -14,5 +14,4 @@ export class UserLoginResponseDto<T> {
 export type BoUserLoginResponseDto =
   UserLoginResponseDto<BoUserWithRelationsResponseDto>;
 
-export type ClientUserLoginResponseDto =
-  UserLoginResponseDto<UserResponseDto>;
+export type ClientUserLoginResponseDto = UserLoginResponseDto<UserResponseDto>;

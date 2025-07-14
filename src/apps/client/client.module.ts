@@ -7,6 +7,12 @@ import { FormModule } from './features/form/form.client.module';
 import { ClientAuthModule } from './features/auth/auth.client.module';
 
 @Module({
-  imports: [ClientAuthModule, UserModule, PatientModule, AddressModule, FormModule],
+  imports: [
+    ClientAuthModule,
+    UserModule,
+    PatientModule,
+    AddressModule,
+    FormModule,
+  ],
 })
-export class ClientModule { }
+export class ClientModule {}

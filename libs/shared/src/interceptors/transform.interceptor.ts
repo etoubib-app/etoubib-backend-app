@@ -28,7 +28,8 @@ export interface Response<T> {
 
 @Injectable()
 export class TransformInterceptor<T>
-  implements NestInterceptor<T, Response<T>> {
+  implements NestInterceptor<T, Response<T>>
+{
   private message!: string;
 
   intercept(
@@ -78,7 +79,7 @@ export class TransformInterceptor<T>
           status: statusCode,
           message: this.message,
           data,
-        }
+        };
       }),
     );
   }

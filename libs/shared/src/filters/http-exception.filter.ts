@@ -27,7 +27,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     };
     const validatorsErrors =
       exceptionResponse?.message &&
-        typeof exceptionResponse.message !== 'string'
+      typeof exceptionResponse.message !== 'string'
         ? exceptionResponse.message
         : undefined;
     const errorCode = exceptionResponse?.error_code;
@@ -37,7 +37,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       status: statusCode, // status code
       error_code: errorCode, // error code
       message: errorMessage, // custom error message
-      errors: validatorsErrors, // class validators errors 
+      errors: validatorsErrors, // class validators errors
       trace: errorTrace, // error trace
       timestamp: new Date().toISOString(),
     });

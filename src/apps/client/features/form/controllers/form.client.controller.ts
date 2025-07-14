@@ -1,11 +1,32 @@
 import { ApiResponseWithData, ClientController, FormEntity } from '@lib/shared';
-import { Body, Delete, Get, HttpCode, HttpStatus, Injectable, Param, ParseUUIDPipe, Patch, Post, Query, Scope, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Injectable,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+  Query,
+  Scope,
+  UseGuards,
+} from '@nestjs/common';
 
 import { ApiConflictResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { IBaseCRUDController } from '@lib/shared/base/base-controller.interface';
 import { PaginationQueryDto } from '@lib/shared/dto';
 import { FormApiService } from '../services/form-api.client.service';
-import { AddQuestionToFormDto, CreateFormDto, FormResponseDto, QuestionResponseDto, UpdateFormDto, UpdateQuestionDto } from '../dtos';
+import {
+  AddQuestionToFormDto,
+  CreateFormDto,
+  FormResponseDto,
+  QuestionResponseDto,
+  UpdateFormDto,
+  UpdateQuestionDto,
+} from '../dtos';
 import { QuestionApiService } from '../services/question-api.client.service';
 import { JwtAuthGuard } from '@lib/shared/modules/jwt-auth';
 
@@ -13,11 +34,13 @@ import { JwtAuthGuard } from '@lib/shared/modules/jwt-auth';
 @UseGuards(JwtAuthGuard)
 @Injectable({ scope: Scope.REQUEST })
 @ClientController('forms')
-export class FormController implements IBaseCRUDController<FormEntity, CreateFormDto, UpdateFormDto> {
+export class FormController
+  implements IBaseCRUDController<FormEntity, CreateFormDto, UpdateFormDto>
+{
   constructor(
     protected readonly formApiService: FormApiService,
-    protected readonly questionApiService: QuestionApiService
-  ) { }
+    protected readonly questionApiService: QuestionApiService,
+  ) {}
 
   /* Forms management */
   @Get()
@@ -52,7 +75,7 @@ export class FormController implements IBaseCRUDController<FormEntity, CreateFor
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ description: 'Soft delete form' })
   async softDelete(@Param('id', ParseUUIDPipe) id: string) {
-    return this.formApiService.remove(id)
+    return this.formApiService.remove(id);
   }
 
   @Post('restore/:id')
@@ -60,11 +83,11 @@ export class FormController implements IBaseCRUDController<FormEntity, CreateFor
   @ApiResponseWithData(FormResponseDto)
   @ApiOperation({ description: 'Restore deleted form' })
   async restore(@Param('id', ParseUUIDPipe) id: string) {
-    return this.formApiService.restore(id)
+    return this.formApiService.restore(id);
   }
 
   /* Questions management */
-  @Post("questions")
+  @Post('questions')
   @ApiOperation({ description: 'Add new question to a form' })
   @ApiResponseWithData(QuestionResponseDto, { status: HttpStatus.CREATED })
   createQuestion(@Body() dto: AddQuestionToFormDto) {
@@ -73,17 +96,24 @@ export class FormController implements IBaseCRUDController<FormEntity, CreateFor
 
   @Patch('questions/:id')
   @ApiResponseWithData(QuestionResponseDto)
-  @ApiConflictResponse({ description: "Question has already been used in a answers" })
+  @ApiConflictResponse({
+    description: 'Question has already been used in a answers',
+  })
   @ApiOperation({ description: 'Update question form' })
-  updateQuestion(@Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdateQuestionDto) {
+  updateQuestion(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: UpdateQuestionDto,
+  ) {
     return this.questionApiService.update(id, dto);
   }
 
   @Delete('questions/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiConflictResponse({ description: "Question has already been used in a answers" })
+  @ApiConflictResponse({
+    description: 'Question has already been used in a answers',
+  })
   @ApiOperation({ description: 'Delete question form' })
   async deleteQuestion(@Param('id', ParseUUIDPipe) id: string) {
-    return this.questionApiService.remove(id)
+    return this.questionApiService.remove(id);
   }
 }

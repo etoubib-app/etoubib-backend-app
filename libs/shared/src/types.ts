@@ -32,5 +32,5 @@ export type TPaginatedData<TData> = {
     pages: number;
     hasNext: boolean;
     hasPrev: boolean;
-  }
-}
+  };
+};

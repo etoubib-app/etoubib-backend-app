@@ -8,4 +8,4 @@ import { AuthController } from './auth.client.controller';
   imports: [JWTAuthModule, AuthModule],
   controllers: [AuthController],
 })
-export class ClientAuthModule { }
+export class ClientAuthModule {}

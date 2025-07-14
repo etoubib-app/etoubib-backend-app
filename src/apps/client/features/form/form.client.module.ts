@@ -12,4 +12,4 @@ import { JWTAuthModule } from '@lib/shared/modules/jwt-auth';
   providers: [FormApiService, QuestionApiService],
   exports: [],
 })
-export class FormModule { }
+export class FormModule {}

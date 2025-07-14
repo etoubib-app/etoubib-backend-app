@@ -11,4 +11,4 @@ import { PatientFormApiService } from './services/patient-form-api.client.servic
   providers: [PatientApiService, PatientFormApiService],
   exports: [],
 })
-export class PatientModule { }
+export class PatientModule {}

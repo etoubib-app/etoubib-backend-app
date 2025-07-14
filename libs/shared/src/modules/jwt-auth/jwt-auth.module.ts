@@ -14,6 +14,6 @@ import { JwtStrategy } from './strategies/jwt.client.strategy';
     PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
   providers: [JwtAuthGuard, JwtStrategy, JWTAuthService],
-  exports: [JwtAuthGuard, JWTAuthService, ConfigModule]  // TODO: without exporting ConfigModule guard fails to work
+  exports: [JwtAuthGuard, JWTAuthService, ConfigModule], // TODO: without exporting ConfigModule guard fails to work
 })
-export class JWTAuthModule { }
+export class JWTAuthModule {}

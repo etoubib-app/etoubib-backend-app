@@ -1,5 +1,23 @@
-import { ApiResponseWithData, ClientController, PatientEntity } from '@lib/shared';
-import { Body, Delete, Get, HttpCode, HttpStatus, Injectable, Param, ParseUUIDPipe, Patch, Post, Query, Scope, UseGuards } from '@nestjs/common';
+import {
+  ApiResponseWithData,
+  ClientController,
+  PatientEntity,
+} from '@lib/shared';
+import {
+  Body,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Injectable,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+  Query,
+  Scope,
+  UseGuards,
+} from '@nestjs/common';
 
 import { ApiConflictResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PatientApiService } from './services/patient-api.client.service';
@@ -14,11 +32,14 @@ import { PatientFormApiService } from './services/patient-form-api.client.servic
 @UseGuards(JwtAuthGuard)
 @Injectable({ scope: Scope.REQUEST })
 @ClientController('patients')
-export class PatientsController implements IBaseCRUDController<PatientEntity, CreatePatientDto, UpdatePatientDto> {
+export class PatientsController
+  implements
+    IBaseCRUDController<PatientEntity, CreatePatientDto, UpdatePatientDto>
+{
   constructor(
     protected readonly patientApiService: PatientApiService,
-    protected readonly patientFormApiService: PatientFormApiService
-  ) { }
+    protected readonly patientFormApiService: PatientFormApiService,
+  ) {}
 
   @Get()
   @ApiOperation({ description: 'Get all patients' })
@@ -45,7 +66,10 @@ export class PatientsController implements IBaseCRUDController<PatientEntity, Cr
   @Patch(':id')
   @ApiResponseWithData(PatientResponseDto)
   @ApiOperation({ description: 'Update patient' })
-  update(@Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdatePatientDto) {
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: UpdatePatientDto,
+  ) {
     return this.patientApiService.update(id, dto);
   }
 
@@ -53,7 +77,7 @@ export class PatientsController implements IBaseCRUDController<PatientEntity, Cr
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ description: 'Soft delete patient' })
   async softDelete(@Param('id', ParseUUIDPipe) id: string) {
-    return this.patientApiService.remove(id)
+    return this.patientApiService.remove(id);
   }
 
   @Post('restore/:id')
@@ -61,7 +85,7 @@ export class PatientsController implements IBaseCRUDController<PatientEntity, Cr
   @ApiResponseWithData(PatientResponseDto)
   @ApiOperation({ description: 'Restore deleted patient' })
   async restore(@Param('id', ParseUUIDPipe) id: string) {
-    return this.patientApiService.restore(id)
+    return this.patientApiService.restore(id);
   }
 
   // TODO: define swagger response DTO
@@ -71,9 +95,13 @@ export class PatientsController implements IBaseCRUDController<PatientEntity, Cr
   async fillPatientForm(
     @Body() dto: FillFormDto,
     @Param('formId', ParseUUIDPipe) formId: string,
-    @Param('patientId', ParseUUIDPipe) patientId: string
+    @Param('patientId', ParseUUIDPipe) patientId: string,
   ) {
-    return await this.patientFormApiService.fillPatientForm(patientId, formId, dto);
+    return await this.patientFormApiService.fillPatientForm(
+      patientId,
+      formId,
+      dto,
+    );
   }
 
   @Get(':patientId/forms/:formId/answers')
@@ -81,9 +109,11 @@ export class PatientsController implements IBaseCRUDController<PatientEntity, Cr
   @ApiOperation({ description: 'Get patient form answers' })
   async getPatientFormAnswers(
     @Param('formId', ParseUUIDPipe) formId: string,
-    @Param('patientId', ParseUUIDPipe) patientId: string
+    @Param('patientId', ParseUUIDPipe) patientId: string,
   ) {
-    return await this.patientFormApiService.getPatientFormAnswers(patientId, formId);
+    return await this.patientFormApiService.getPatientFormAnswers(
+      patientId,
+      formId,
+    );
   }
-
 }

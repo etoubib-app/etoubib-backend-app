@@ -9,7 +9,7 @@ export class FormEntity extends BaseEntity {
 
   // TODO: add status ( published, draft ) ?
 
-  @OneToMany(() => QuestionEntity, question => question.form)
+  @OneToMany(() => QuestionEntity, (question) => question.form)
   questions!: QuestionEntity[];
 
   constructor(data: Partial<FormEntity> = {}) {

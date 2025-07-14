@@ -1,4 +1,3 @@
-
 import {
   IsString,
   IsDateString,
@@ -15,7 +14,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ExactlyOneAddressField } from '../validators';
 import { CreateAddressDto } from '../../../modules/address/dtos';
 
-@ExactlyOneAddressField({ message: 'Provide either address or address_id, not both' })
+@ExactlyOneAddressField({
+  message: 'Provide either address or address_id, not both',
+})
 export class CreatePatientDto {
   @IsString()
   @MaxLength(100)
@@ -67,21 +68,23 @@ export class CreatePatientDto {
   // @IsUUID()
   // guardian_id?: string;
 
-  @ValidateIf(o => !o.address_id)
+  @ValidateIf((o) => !o.address_id)
   @ValidateNested()
   @Type(() => CreateAddressDto)
   @IsOptional()
   @ApiProperty({
-    type: () => CreateAddressDto, nullable: true, example: {
+    type: () => CreateAddressDto,
+    nullable: true,
+    example: {
       address: '123 Main Street',
       postalCode: '20250',
       city: 'Casablanca',
-      country: 'Morocco'
-    }
+      country: 'Morocco',
+    },
   })
   address?: CreateAddressDto;
 
-  @ValidateIf(o => !o.address)
+  @ValidateIf((o) => !o.address)
   @IsUUID()
   @IsOptional()
   address_id?: string;

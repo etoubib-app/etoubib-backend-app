@@ -1,11 +1,10 @@
-import { Repository, } from 'typeorm';
+import { Repository } from 'typeorm';
 import { BaseService } from './base.service';
 import { BadRequestException } from '@nestjs/common';
 
 export abstract class SoftDeleteBaseService<
-  Entity extends { id: string; createdAt: Date, deletedAt: Date },
+  Entity extends { id: string; createdAt: Date; deletedAt: Date },
 > extends BaseService<Entity> {
-
   constructor(protected readonly repository: Repository<Entity>) {
     super(repository);
   }
@@ -14,9 +13,11 @@ export abstract class SoftDeleteBaseService<
     try {
       const result = await this.repository.softDelete(id);
       if (!result.affected) {
-        throw new BadRequestException(`${this.entityName} with id ${id} not found or already deleted`);
+        throw new BadRequestException(
+          `${this.entityName} with id ${id} not found or already deleted`,
+        );
       }
-      return { message: `${this.entityName} with id ${id} has been deleted` }
+      return { message: `${this.entityName} with id ${id} has been deleted` };
     } catch (error) {
       this.handleDbError(error);
     }
@@ -25,7 +26,7 @@ export abstract class SoftDeleteBaseService<
   async restore(id: string): Promise<Entity> {
     try {
       await this.repository.restore(id);
-      return this.findOne(id)
+      return this.findOne(id);
     } catch (error) {
       this.handleDbError(error);
     }

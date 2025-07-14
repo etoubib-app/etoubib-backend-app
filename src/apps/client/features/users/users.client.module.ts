@@ -11,4 +11,4 @@ import { UserController } from './users.client.controller';
   providers: [UserApiService, UserService],
   exports: [UserService],
 })
-export class UserModule { }
+export class UserModule {}

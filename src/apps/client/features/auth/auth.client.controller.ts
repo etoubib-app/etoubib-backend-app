@@ -31,7 +31,7 @@ import {
 @Injectable()
 @ClientController('auth')
 export class AuthController {
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {}
 
   @ApiOperation({ description: 'Clinic user authenticate' })
   @ApiResponseWithData(UserLoginResponseDto)
