@@ -54,7 +54,7 @@ export function handleDbError(error: any): never {
   // ORM errors ( findOneOrFail , findOneByOrFailBy... )
   if (error instanceof EntityNotFoundError) {
     const errorTrace = process.env.NODE_ENV === 'local' ? error.message : undefined; // Only show detailed error trace in local env
-    throw new NotFoundException({ message: 'Entity not found', detail: errorTrace });
+    throw new NotFoundException({ message: 'Entity not found', detail: errorTrace?.replace(/\n/g, "") });
   }
 
   throw error;
