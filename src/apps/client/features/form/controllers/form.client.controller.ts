@@ -7,10 +7,10 @@ import { PaginationQueryDto } from '@lib/shared/dto';
 import { FormApiService } from '../services/form-api.client.service';
 import { AddQuestionToFormDto, CreateFormDto, FormResponseDto, QuestionResponseDto, UpdateFormDto, UpdateQuestionDto } from '../dtos';
 import { QuestionApiService } from '../services/question-api.client.service';
-import { ClientJwtAuthGuard } from '@lib/shared/modules/jwt-auth';
+import { JwtAuthGuard } from '@lib/shared/modules/jwt-auth';
 
 @ApiTags('Forms')
-@UseGuards(ClientJwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 @Injectable({ scope: Scope.REQUEST })
 @ClientController('forms')
 export class FormController implements IBaseCRUDController<FormEntity, CreateFormDto, UpdateFormDto> {

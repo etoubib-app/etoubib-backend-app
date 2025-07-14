@@ -1,12 +1,12 @@
-import { ClientUser } from '@lib/shared/entities';
-import { Injectable, Scope } from '@nestjs/common';
+import { User } from '@lib/shared/entities';
+import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 
-@Injectable({ scope: Scope.REQUEST })
-export class ClientUsersService {
-  private readonly clientUsersRepository: Repository<ClientUser>;
+@Injectable()
+export class UserService {
+  private readonly userRepository: Repository<User>;
 
   constructor(private readonly connection: DataSource) {
-    this.clientUsersRepository = connection.getRepository(ClientUser);
+    this.userRepository = connection.getRepository(User);
   }
 }

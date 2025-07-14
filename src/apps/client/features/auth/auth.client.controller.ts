@@ -4,14 +4,14 @@ import {
   GetAuthUser,
 } from '@lib/shared';
 import {
-  ClientUserLoginResponseDto,
-  ClientUserWithRelationsResponseDto,
-  UserLoginDto,
   UserLoginResponseDto,
+  UserResponseDto,
+  UserLoginDto,
+  ClientUserLoginResponseDto,
 } from '@lib/shared/dto';
 import { AuthService } from '@lib/shared/modules/auth/auth.service';
 import { getTenantId } from '@lib/shared/modules/auth/decorators/tenant.decorator';
-import { ClientJwtAuthGuard } from '@lib/shared/modules/jwt-auth';
+import { JwtAuthGuard } from '@lib/shared/modules/jwt-auth';
 import {
   Body,
   Get,
@@ -27,11 +27,11 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 
-@ApiTags('Client Auth')
+@ApiTags('Client auth')
 @Injectable()
 @ClientController('auth')
-export class ClientAuthController {
-  constructor(private authService: AuthService) {}
+export class AuthController {
+  constructor(private authService: AuthService) { }
 
   @ApiOperation({ description: 'Clinic user authenticate' })
   @ApiResponseWithData(UserLoginResponseDto)
@@ -45,11 +45,11 @@ export class ClientAuthController {
     return this.authService.clientLogin(userLoginDto, tenantId);
   }
 
-  @UseGuards(ClientJwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ description: 'Clinic authenticated user' })
-  @ApiResponseWithData(ClientUserWithRelationsResponseDto)
+  @ApiResponseWithData(UserResponseDto)
   @Get('me')
-  me(@GetAuthUser() user: ClientUserWithRelationsResponseDto) {
+  me(@GetAuthUser() user: UserResponseDto) {
     return { user };
   }
 }

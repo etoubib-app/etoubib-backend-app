@@ -6,12 +6,12 @@ import { PatientApiService } from './services/patient-api.client.service';
 import { IBaseCRUDController } from '@lib/shared/base/base-controller.interface';
 import { CreatePatientDto, PatientResponseDto, UpdatePatientDto } from './dtos';
 import { PaginationQueryDto } from '@lib/shared/dto';
-import { ClientJwtAuthGuard } from '@lib/shared/modules/jwt-auth';
+import { JwtAuthGuard } from '@lib/shared/modules/jwt-auth';
 import { FillFormDto, FormAnswersResponseDto } from '../form/dtos';
 import { PatientFormApiService } from './services/patient-form-api.client.service';
 
 @ApiTags('Patients')
-@UseGuards(ClientJwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 @Injectable({ scope: Scope.REQUEST })
 @ClientController('patients')
 export class PatientsController implements IBaseCRUDController<PatientEntity, CreatePatientDto, UpdatePatientDto> {
