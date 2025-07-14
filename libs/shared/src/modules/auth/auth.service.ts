@@ -8,10 +8,9 @@ import {
   UserLoginDto,
 } from '../../dto';
 import { BoUserEntity } from '../../entities/backoffice';
-import { ClientUser } from '../../entities/client';
+import { User } from '../../entities/client';
 import { InvalidCredentialsException } from '../../exceptions';
 import { BoUserMapper } from '../../mappers/users.bo.mapper';
-import { ClientUserMapper } from '../../mappers/users.client.mapper';
 import { getTenantConnection } from '../database/connection.client';
 import { USER_REPOSITORY_TOKEN } from '../database/repository-provider/user-repository.provider';
 import { JWTAuthService } from '../jwt-auth';
@@ -24,7 +23,7 @@ export class AuthService {
     @Inject(USER_REPOSITORY_TOKEN)
     private readonly usersRepository: Repository<BoUserEntity>,
     private readonly jwtAuthService: JWTAuthService,
-  ) { }
+  ) {}
 
   async clientLogin(
     { email, password, remember_me }: UserLoginDto,
@@ -33,23 +32,24 @@ export class AuthService {
     if (!tenantId) {
       throw new Error('Tenant ID must be provided');
     }
-    const tenantConnexion = await getTenantConnection(tenantId);
-    const userRepository = tenantConnexion.getRepository(ClientUser);
-    const user = await userRepository.findOne({
-      where: { email },
-    });
+    const tenantConnection = await getTenantConnection(tenantId);
+    const userRepository = tenantConnection.getRepository(User);
+    const user = await userRepository
+      .createQueryBuilder('user')
+      .addSelect('user._password') // add hidden field _password
+      .where('user.email = :email', { email })
+      .getOne();
+
     if (!user) {
       throw new InvalidCredentialsException();
     }
     await this.validateUserWithPassword(user, password);
 
     const payload: JwtPayload = { userId: user.id, tenantId };
-
     const token = this.generateAccessToken(payload, !!remember_me);
+    const safeUser = user.toSafeObject() as User; // exclude password
 
-    const clientUserMapper = new ClientUserMapper();
-    const userDto = clientUserMapper.toDtoWithRelations(user);
-    return { user: userDto, tokens: { accessToken: token } };
+    return { user: safeUser, tokens: { accessToken: token } };
   }
 
   async boLogin({
@@ -58,7 +58,7 @@ export class AuthService {
     remember_me,
   }: UserLoginDto): Promise<BoUserLoginResponseDto> {
     const user = await this.usersRepository.findOne({
-      where: { email: email },
+      where: { email },
     });
     if (!user) {
       throw new InvalidCredentialsException();
@@ -91,7 +91,7 @@ export class AuthService {
   }
 
   private async validateUserWithPassword(
-    user: ClientUser | BoUserEntity,
+    user: User | BoUserEntity,
     password: string,
   ) {
     const passwordMatched = await user.checkPassword(password);
