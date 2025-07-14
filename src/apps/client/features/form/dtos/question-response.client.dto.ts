@@ -25,3 +25,8 @@ export class QuestionResponseDto extends BaseResponseDto {
     })
     optionsJson?: string[] | null;
 }
+
+export class QuestionAnswerResponseDto extends QuestionResponseDto {
+    @ApiProperty({ example: ['Fever'], nullable: true, required: false })
+    answer?: boolean | string | string[] | null;
+}
