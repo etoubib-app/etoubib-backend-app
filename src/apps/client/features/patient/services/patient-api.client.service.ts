@@ -6,7 +6,7 @@ import { CreatePatientDto, UpdatePatientDto } from '../dtos';
 import { AddressEntity, PatientEntity } from '@lib/shared';
 
 @Injectable({ scope: Scope.REQUEST })
-export class PatientsApiService extends SoftDeleteBaseService<PatientEntity> {
+export class PatientApiService extends SoftDeleteBaseService<PatientEntity> {
   protected readonly addressRepository: Repository<AddressEntity>;
   protected readonly patientRepository: Repository<PatientEntity>;
 
@@ -32,13 +32,10 @@ export class PatientsApiService extends SoftDeleteBaseService<PatientEntity> {
         if (!address) throw new NotFoundException(`Address with id ${dto.address_id} not found`);
       }
 
-      const patient = queryRunner.manager.create(PatientEntity, {
-        ...dto,
-        ...(address ? { address } : {}),
-      });
+      const patient = queryRunner.manager.create(PatientEntity, { ...dto, ...(address ? { address } : {}) });
       const savedPatient = await queryRunner.manager.save(patient);
-
       await queryRunner.commitTransaction();
+
       return savedPatient;
     } catch (error) {
       await queryRunner.rollbackTransaction();
