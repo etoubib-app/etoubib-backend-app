@@ -1,18 +1,20 @@
-import { Inject, Injectable, NotFoundException, Scope } from '@nestjs/common';
+import { ConflictException, Inject, Injectable, NotFoundException, Scope } from '@nestjs/common';
 import { CLIENT_CONNECTION } from '@lib/shared/modules';
 import { DataSource, Repository } from 'typeorm';
-import { AddQuestionToFormDto } from '../dtos';
-import { FormEntity, QuestionEntity } from '@lib/shared';
+import { AddQuestionToFormDto, UpdateQuestionDto } from '../dtos';
+import { FormAnswerEntity, FormEntity, QuestionEntity } from '@lib/shared';
 import { BaseService } from '@lib/shared/base';
 
 @Injectable({ scope: Scope.REQUEST })
 export class QuestionApiService extends BaseService<QuestionEntity> {
   protected readonly questionRepository: Repository<QuestionEntity>;
   protected readonly formRepository: Repository<FormEntity>;
+  protected readonly formAnswerRepository: Repository<FormAnswerEntity>;
 
   constructor(@Inject(CLIENT_CONNECTION) protected connection: DataSource) {
     super(connection.getRepository(QuestionEntity));
     this.formRepository = this.connection.getRepository(FormEntity)
+    this.formAnswerRepository = this.connection.getRepository(FormAnswerEntity);
     this.questionRepository = this.repository
   }
 
@@ -26,11 +28,15 @@ export class QuestionApiService extends BaseService<QuestionEntity> {
     }
   }
 
-  // TODO: fix DTO and test
-  async updateQuestion(id: string, data: AddQuestionToFormDto): Promise<QuestionEntity> {
+  override async update(id: string, data: UpdateQuestionDto): Promise<QuestionEntity> {
     const question = await this.questionRepository.preload({ id, ...data } as any);
-    if (!question) throw new NotFoundException({ message: `${this.entityName} with id ${id} not found` });
-    // TODO: check if question is used in any form answers
+    if (!question) throw new NotFoundException({ message: `Question with id ${id} not found` });
+
+    // check if question is used in any form answers
+    const existingAnswers = await this.formAnswerRepository.find({ where: { question: { id } } });
+    if (existingAnswers.length > 0) {
+      throw new ConflictException({ message: `Question with id ${id} is used in form answers and cannot be updated` });
+    }
 
     try {
       return await this.questionRepository.save(question);
@@ -39,13 +45,18 @@ export class QuestionApiService extends BaseService<QuestionEntity> {
     }
   }
 
-  async deleteQuestion(id: string): Promise<{ message: string }> {
+  override async remove(id: string): Promise<{ message: string }> {
     const question = await this.findOne(id);
-    // TODO: check if question is used in any form answers
+
+    // check if question is used in any form answer
+    const existingAnswers = await this.formAnswerRepository.find({ where: { question: { id } } });
+    if (existingAnswers.length > 0) {
+      throw new ConflictException({ message: `Question with id ${id} is used in form answers and cannot be deleted` });
+    }
 
     try {
       await this.questionRepository.remove(question);
-      return { message: `${this.entityName} with id ${id} has been deleted` };
+      return { message: `Question with id ${id} has been deleted` };
     } catch (error) {
       this.handleDbError(error);
     }

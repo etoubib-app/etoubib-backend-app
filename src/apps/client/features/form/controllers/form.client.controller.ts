@@ -1,11 +1,11 @@
 import { ApiResponseWithData, ClientController, FormEntity } from '@lib/shared';
 import { Body, Delete, Get, HttpCode, HttpStatus, Injectable, Param, ParseUUIDPipe, Patch, Post, Query, Scope, UseGuards } from '@nestjs/common';
 
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiConflictResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { IBaseCRUDController } from '@lib/shared/base/base-controller.interface';
 import { PaginationQueryDto } from '@lib/shared/dto';
 import { FormApiService } from '../services/form-api.client.service';
-import { AddQuestionToFormDto, CreateFormDto, FormResponseDto, QuestionResponseDto, UpdateFormDto } from '../dtos';
+import { AddQuestionToFormDto, CreateFormDto, FormResponseDto, QuestionResponseDto, UpdateFormDto, UpdateQuestionDto } from '../dtos';
 import { QuestionApiService } from '../services/question-api.client.service';
 import { ClientJwtAuthGuard } from '@lib/shared/modules/jwt-auth';
 
@@ -45,12 +45,12 @@ export class FormController implements IBaseCRUDController<FormEntity, CreateFor
   @ApiResponseWithData(FormResponseDto)
   @ApiOperation({ description: 'Update form' })
   update(@Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdateFormDto) {
-    return this.formApiService.update(id, dto); // TODO: Add questions bulk updates functionality
+    return this.formApiService.update(id, dto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation({ description: 'Delete form' })
+  @ApiOperation({ description: 'Soft delete form' })
   async softDelete(@Param('id', ParseUUIDPipe) id: string) {
     return this.formApiService.remove(id)
   }
@@ -64,24 +64,26 @@ export class FormController implements IBaseCRUDController<FormEntity, CreateFor
   }
 
   /* Questions management */
-  @Post("/questions")
+  @Post("questions")
   @ApiOperation({ description: 'Add new question to a form' })
   @ApiResponseWithData(QuestionResponseDto, { status: HttpStatus.CREATED })
   createQuestion(@Body() dto: AddQuestionToFormDto) {
     return this.questionApiService.addQuestionToForm(dto);
   }
 
-  @Patch('/questions/:id')
-  @ApiResponseWithData(FormResponseDto)
+  @Patch('questions/:id')
+  @ApiResponseWithData(QuestionResponseDto)
+  @ApiConflictResponse({ description: "Question has already been used in a answers" })
   @ApiOperation({ description: 'Update question form' })
-  updateQuestion(@Param('id', ParseUUIDPipe) id: string, @Body() dto: AddQuestionToFormDto) {
-    return this.questionApiService.updateQuestion(id, dto);
+  updateQuestion(@Param('id', ParseUUIDPipe) id: string, @Body() dto: UpdateQuestionDto) {
+    return this.questionApiService.update(id, dto);
   }
 
-  @Delete('/questions/:id')
+  @Delete('questions/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiConflictResponse({ description: "Question has already been used in a answers" })
   @ApiOperation({ description: 'Delete question form' })
   async deleteQuestion(@Param('id', ParseUUIDPipe) id: string) {
-    return this.questionApiService.deleteQuestion(id)
+    return this.questionApiService.remove(id)
   }
 }
