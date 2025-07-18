@@ -1,13 +1,8 @@
-import { ClientRole } from './role.client.entity';
-import { ClientRoleAuthorization } from './role-authorization.client.entity';
-import { ClientUser } from './users.client.entity';
-
+export * from './users.client.entity';
 export * from './role.client.entity';
 export * from './role-authorization.client.entity';
-export * from './users.client.entity';
-
-export const CLIENT_ENTITIES = [
-  ClientUser,
-  ClientRole,
-  ClientRoleAuthorization,
-];
+export * from './patient.client.entity';
+export * from './address.client.entity';
+export * from './question.client.entity';
+export * from './form.client.entity';
+export * from './form-answer.client.entity';

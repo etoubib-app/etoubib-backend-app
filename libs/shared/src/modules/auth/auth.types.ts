@@ -1,4 +1,4 @@
-import { ClientUserWithRelationsResponseDto } from '../../dto';
+import { UserResponseDto } from '../../dto';
 
 export type JwtPayload = {
   userId: string;
@@ -6,5 +6,5 @@ export type JwtPayload = {
   is_bo_user?: boolean;
 };
 
-export type TAuthUser = InstanceType<typeof ClientUserWithRelationsResponseDto>;
-// export type TAuthUser = InstanceType<typeof ClientUserWithRelationsResponseDto> | InstanceType<typeof BoUserWithRelationsResponseDto>;
+export type TAuthUser = InstanceType<typeof UserResponseDto>;
+// export type TAuthUser = InstanceType<typeof UserResponseDto> | InstanceType<typeof BoUserWithRelationsResponseDto>;

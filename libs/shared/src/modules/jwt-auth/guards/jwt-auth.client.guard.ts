@@ -11,7 +11,7 @@ import { ExtractJwt } from 'passport-jwt';
 import { JWTAuthService } from '../services/jwt-auth.service';
 
 @Injectable()
-export class ClientJwtAuthGuard extends AuthGuard('jwt') {
+export class JwtAuthGuard extends AuthGuard('jwt') {
   constructor(
     private readonly configService: ConfigService,
     private readonly jwtAuthService: JWTAuthService,

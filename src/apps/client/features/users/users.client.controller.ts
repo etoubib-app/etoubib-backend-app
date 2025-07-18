@@ -1,31 +1,53 @@
 import { ClientController } from '@lib/shared';
 import { ApiResponseWithData } from '@lib/shared/decorators';
-import { ClientCreateUserDto, ClientUserResponseDto } from '@lib/shared/dto';
-import { ClientJwtAuthGuard } from '@lib/shared/modules/jwt-auth';
-import { Body, Get, Injectable, Post, Scope, UseGuards } from '@nestjs/common';
+import {
+  CreateUserDto,
+  UserResponseDto,
+  PaginationQueryDto,
+} from '@lib/shared/dto';
+import { JwtAuthGuard } from '@lib/shared/modules/jwt-auth';
+import {
+  Body,
+  Get,
+  HttpStatus,
+  Injectable,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Query,
+  Scope,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiConflictResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { ClientUsersApiService } from './services';
+import { UserApiService } from './services';
 
-@ApiTags('Client Users')
-@UseGuards(ClientJwtAuthGuard)
+@ApiTags('Client users')
+@UseGuards(JwtAuthGuard)
 @Injectable({ scope: Scope.REQUEST })
 @ClientController('users')
-export class ClientUserController {
-  constructor(private readonly clientUsersApiService: ClientUsersApiService) {}
+export class UserController {
+  constructor(private readonly userApiService: UserApiService) {}
 
-  @ApiOperation({ description: 'Clinic users list' })
-  @ApiResponseWithData(ClientUserResponseDto, { isArray: true })
   @Get()
-  public getUsers() {
-    return this.clientUsersApiService.getUsers('toDto');
+  @ApiOperation({ description: 'Get all clinic users' })
+  @ApiResponseWithData(UserResponseDto, { isArray: true })
+  findAll(@Query() query: PaginationQueryDto) {
+    return this.userApiService.findAll(query);
   }
 
-  @ApiOperation({ description: 'Create new clinic user' })
-  @ApiResponseWithData(ClientUserResponseDto, { status: 201 })
-  @ApiConflictResponse({ description: 'User already exists' })
+  @Get(':id')
+  @ApiOperation({ description: 'Get user by id' })
+  @ApiResponseWithData(UserResponseDto)
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
+    return this.userApiService.findOne(id);
+  }
+
   @Post()
-  public createUser(@Body() UserDto: ClientCreateUserDto) {
-    return this.clientUsersApiService.createUser(UserDto, 'toDto');
+  @ApiOperation({ description: 'Create new user' })
+  @ApiResponseWithData(UserResponseDto, { status: HttpStatus.CREATED })
+  @ApiConflictResponse({ description: 'User already exists' })
+  create(@Body() dto: CreateUserDto) {
+    return this.userApiService.create(dto);
   }
 }

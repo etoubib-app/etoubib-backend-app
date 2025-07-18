@@ -1,6 +1,5 @@
-import { ClientUser, InvalidTokenException } from '@lib/shared';
-import { ClientUserWithRelationsResponseDto } from '@lib/shared/dto';
-import { ClientUserMapper } from '@lib/shared/mappers';
+import { User, InvalidTokenException } from '@lib/shared';
+import { UserResponseDto } from '@lib/shared/dto';
 import { getTenantConnection, JwtPayload } from '@lib/shared/modules';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -8,7 +7,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 @Injectable()
-export class ClientJwtStrategy extends PassportStrategy(Strategy) {
+export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(protected readonly configService: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -17,19 +16,15 @@ export class ClientJwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate({
-    userId,
-    tenantId,
-  }: JwtPayload): Promise<ClientUserWithRelationsResponseDto> {
+  async validate({ userId, tenantId }: JwtPayload): Promise<UserResponseDto> {
     const tenantConnection = await getTenantConnection(tenantId);
     const user = await tenantConnection
-      .getRepository(ClientUser)
+      .getRepository(User)
       .findOneBy({ id: userId });
-    if (!user) throw new InvalidTokenException();
 
+    if (!user) throw new InvalidTokenException();
     user.checkUserStatus();
 
-    const clientUserMapper = new ClientUserMapper();
-    return clientUserMapper.toDtoWithRelations(user);
+    return user;
   }
 }

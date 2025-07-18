@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs/internal/Observable';
 import { map } from 'rxjs/internal/operators/map';
+import { isPaginatedData } from '../helpers';
 
 export enum Message {
   DEFAULT = 'Success !',
@@ -64,11 +65,22 @@ export class TransformInterceptor<T>
     }
 
     return next.handle().pipe(
-      map((data: T) => ({
-        status: statusCode,
-        message: this.message,
-        data,
-      })),
+      map((data: T) => {
+        if (isPaginatedData(data)) {
+          return {
+            status: statusCode,
+            message: this.message,
+            data: data.data as T,
+            meta: data.meta,
+          };
+        }
+
+        return {
+          status: statusCode,
+          message: this.message,
+          data,
+        };
+      }),
     );
   }
 }

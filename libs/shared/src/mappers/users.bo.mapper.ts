@@ -5,7 +5,7 @@ import {
   BoUserWithRelationsResponseDto,
 } from '../dto';
 import { BoUserEntity } from '../entities/backoffice';
-import { ClientUserStatus } from '../enums/client';
+import { UserStatus } from '../enums/client';
 
 export type TBoUserMapperResponse = ReturnType<
   InstanceType<typeof BoUserMapper>['transform']
@@ -51,7 +51,7 @@ export class BoUserMapper extends BaseMapper<
     entity.email = dto.email;
     entity.lastName = dto.lastName;
     entity.firstName = dto.firstName;
-    entity.status = ClientUserStatus.active;
+    entity.status = UserStatus.active;
     await entity.setPassword(dto.password); // encrypt password
     return entity;
   }

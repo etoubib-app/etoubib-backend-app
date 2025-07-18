@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 import { BaseResponseDto } from '../../base';
-import { TClientUserStatus } from '../../enums/client';
+import { TUserStatus } from '../../enums/client';
 
-export class ClientUserResponseDto extends BaseResponseDto {
+export class UserResponseDto extends BaseResponseDto {
   @ApiProperty({ example: 'John' })
   firstName!: string;
 
@@ -14,13 +14,8 @@ export class ClientUserResponseDto extends BaseResponseDto {
   email!: string;
 
   @ApiProperty({ example: 'active' })
-  status!: TClientUserStatus;
+  status!: TUserStatus;
 
   @ApiProperty({ example: false })
   isOwner?: boolean;
-}
-
-export class ClientUserWithRelationsResponseDto extends ClientUserResponseDto {
-  @ApiProperty()
-  extra_field_example!: string;
 }

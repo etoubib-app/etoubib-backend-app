@@ -1,9 +1,9 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-import { ClientRoleAuthorization } from './role-authorization.client.entity';
+import { RoleAuthorization } from './role-authorization.client.entity';
 
 @Entity('roles')
-export class ClientRole {
+export class Role {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
@@ -11,10 +11,10 @@ export class ClientRole {
   name!: string;
 
   @OneToMany(
-    () => ClientRoleAuthorization,
+    () => RoleAuthorization,
     (roleAuthorization) => roleAuthorization.role,
   )
-  authorizations!: ClientRoleAuthorization[];
+  authorizations!: RoleAuthorization[];
 
   @Column({ type: 'uuid', nullable: true })
   parent_id!: string;

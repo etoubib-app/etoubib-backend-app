@@ -1,81 +1,52 @@
-import { type TBaseMapperFormat } from '@lib/shared/base';
-import { ClientCreateUserDto } from '@lib/shared/dto';
-import { ClientUser } from '@lib/shared/entities';
-import {
-  ForeignKeyConflictException,
-  UserExistsException,
-} from '@lib/shared/exceptions';
-import {
-  ClientUserMapper,
-  type TClientUserMapperResponse,
-} from '@lib/shared/mappers';
+import { SoftDeleteBaseService } from '@lib/shared/base';
+import { CreateUserDto, PaginationQueryDto } from '@lib/shared/dto';
+import { User } from '@lib/shared/entities';
+import { UserStatus } from '@lib/shared/enums';
 import { CLIENT_CONNECTION } from '@lib/shared/modules';
-import { DBErrorCode } from '@lib/shared/types';
-import {
-  Inject,
-  Injectable,
-  InternalServerErrorException,
-  Scope,
-} from '@nestjs/common';
+import { TPaginatedData } from '@lib/shared/types';
+import { Inject, Injectable, NotFoundException, Scope } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 
-import { ClientUsersService } from './users.client.service';
-
-// TODO : use ClientUserMapper in ClientUserEntity
 @Injectable({ scope: Scope.REQUEST })
-export class ClientUsersApiService {
-  private readonly clientUsersRepository: Repository<ClientUser>;
+export class UserApiService extends SoftDeleteBaseService<User> {
+  private readonly userRepository: Repository<User>;
 
-  constructor(
-    @Inject(CLIENT_CONNECTION) connection: DataSource,
-    private readonly clientUsersService: ClientUsersService,
-  ) {
-    this.clientUsersRepository = connection.getRepository(ClientUser);
+  constructor(@Inject(CLIENT_CONNECTION) connection: DataSource) {
+    super(connection.getRepository(User));
+    this.userRepository = this.repository;
   }
 
-  async getUsers(
-    format: TBaseMapperFormat = 'toDto',
-  ): Promise<TClientUserMapperResponse[]> {
-    const clientUserMapper = new ClientUserMapper();
-    const userEntities = await this.clientUsersRepository.find();
-    return userEntities.map((entity) =>
-      clientUserMapper.transform(entity, format),
-    );
+  override async findAll(
+    query: PaginationQueryDto,
+  ): Promise<TPaginatedData<User>> {
+    return super.findAll(query, {});
   }
 
-  async getUserById(
-    id: string,
-    format: TBaseMapperFormat = 'toDtoWithRelations',
-  ): Promise<TClientUserMapperResponse> {
-    const userEntity = await this.clientUsersRepository.findOneByOrFail({ id });
-    userEntity.checkUserStatus();
-
-    const clientUserMapper = new ClientUserMapper();
-    return clientUserMapper.transform(userEntity, format);
+  override async findOne(id: string): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user)
+      throw new NotFoundException({ message: `User with id ${id} not found` });
+    return user;
   }
 
-  async createUser(
-    userDto: ClientCreateUserDto,
-    format: TBaseMapperFormat = 'toDto',
-  ): Promise<TClientUserMapperResponse> {
-    const clientUserMapper = new ClientUserMapper();
-
+  override async create(dto: CreateUserDto): Promise<User> {
     try {
-      let userEntity = await clientUserMapper.toCreateEntity(userDto);
-      userEntity = await this.clientUsersRepository.save(userEntity);
-      return clientUserMapper.transform(userEntity, format);
+      const user = await this._prepareUserEntity(dto);
+      const savedUser = await this.userRepository.save(user);
+      return savedUser.toSafeObject() as User; // exclude password
     } catch (error) {
-      const { code } = error as { code: unknown };
-      if (code == DBErrorCode.PgUniqueConstraintViolation) {
-        throw new UserExistsException(userDto.email);
-      }
-      if (
-        code == DBErrorCode.PgForeignKeyConstraintViolation ||
-        code == DBErrorCode.PgNotNullConstraintViolation
-      ) {
-        throw new ForeignKeyConflictException();
-      }
-      throw new InternalServerErrorException();
+      this.handleDbError(error);
     }
+  }
+
+  private async _prepareUserEntity(dto: CreateUserDto): Promise<User> {
+    const user = this.userRepository.create({
+      email: dto.email,
+      lastName: dto.lastName,
+      firstName: dto.firstName,
+      status: UserStatus.active,
+    });
+    await user.setPassword(dto.password); // encrypt password
+    return user;
   }
 }
